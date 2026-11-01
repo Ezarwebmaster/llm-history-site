@@ -1,0 +1,57 @@
+{
+  "@lobehub/icons-static-svg@1.101.0": {
+    "license": "MIT (the SVG drawings). Every mark is a trademark of its owner.",
+    "home": "https://github.com/lobehub/lobe-icons",
+    "files": {
+      "openai": {
+        "from": "icons/openai.svg",
+        "sha256": "a595df6b423920c67a7f8f73c063e4bfb72d415948097b6cac063a2366bb5186"
+      },
+      "anthropic": {
+        "from": "icons/anthropic.svg",
+        "sha256": "e833fdfa7e7187a86a05b870925067556a506dcd4239089aed73e1e58c9366a3"
+      },
+      "xai": {
+        "from": "icons/xai.svg",
+        "sha256": "89eb7de9f0d02a41cfecd9109e253d7fd3529e27467dee4254faa67f3ac21451"
+      },
+      "zai": {
+        "from": "icons/zai.svg",
+        "sha256": "e748cb5108ce37b116d7a5ba97d37e0ae97eadf6849b0de11afb248e244a01e1"
+      },
+      "moonshot": {
+        "from": "icons/moonshot.svg",
+        "sha256": "435f41b74e6a87639b6bf860e9628f20cbe7d6229bece412d548f4cea3081852"
+      },
+      "liquid": {
+        "from": "icons/liquid.svg",
+        "sha256": "4727b1cbd33bd256aca5be79a7d91a4f2753b2feb0dcfbb7b9fb3f23928c2467"
+      },
+      "google": {
+        "from": "icons/google-color.svg",
+        "sha256": "4e6aa8892ef15a6b431f40f2c9045979bf7e2357524e7bbb89b353cf4f32a5ac"
+      },
+      "mistral": {
+        "from": "icons/mistral-color.svg",
+        "sha256": "e8037bf8466c07cad9149d3bbe2a7d5b1b12c54f03d56dfed3a8adffcdc37866",
+        "changed": "fill=\"gold\" written as #FFD700 (only #hex colours are accepted)"
+      },
+      "nvidia": {
+        "from": "icons/nvidia-color.svg",
+        "sha256": "8c941e4eb8b782eccaaea1240c059d20be33ab8eda28d7c9ed9b53ac802fe683"
+      },
+      "deepseek": {
+        "from": "icons/deepseek-color.svg",
+        "sha256": "deba5f98a5c1796e20fcac3149bcd7eb8a32f0bdd04d048819400b1f28bd1439"
+      },
+      "cohere": {
+        "from": "icons/cohere-color.svg",
+        "sha256": "84d0ee3cbe66f030e5a18cb2c86da9166ab2137c7a98781693bb1fbf31e392b9"
+      },
+      "alibaba": {
+        "from": "icons/alibaba-color.svg",
+        "sha256": "48ee796c5b1da5f5f11dbd70c5c64a3f7efcb9eeb9022ae687d81fc813e942ee"
+      }
+    }
+  }
+}

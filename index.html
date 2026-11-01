@@ -21,6 +21,7 @@
 :root {
   --canvas: #F0F3F2; --canvas-2: #E8EDEC; --glow: rgba(20, 184, 166, 0.13);
   --frame: #F9FBFA; --surface: #FFFFFF; --surface-2: #F2F5F4; --surface-3: #E7EDEB;
+  --logo-chip: #FFFFFF; --logo-chip-line: rgba(16, 32, 31, 0.14);
   --line: rgba(16, 32, 31, 0.09); --line-2: rgba(16, 32, 31, 0.16);
   --ink: #10201F; --on-ink: #FFFFFF; --on-ink-2: #A9B7B4; --mint: #5EEAD4; --ink-line: rgba(255, 255, 255, 0.09); --warn-on-ink: #FCD34D;
   --text: #0F1A19; --text-2: #56635F; --text-3: #5F6C69;
@@ -43,7 +44,7 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --canvas: #091211; --canvas-2: #070E0D; --glow: rgba(45, 212, 191, 0.10);
-    --frame: #0E1918; --surface: #13201F; --surface-2: #192927; --surface-3: #22342F;
+    --frame: #0E1918; --surface: #13201F; --surface-2: #192927; --surface-3: #22342F; --logo-chip: #E6EFED; --logo-chip-line: transparent;
     --line: rgba(255, 255, 255, 0.08); --line-2: rgba(255, 255, 255, 0.16);
     --ink: #050B0A; --on-ink: #FFFFFF; --on-ink-2: #A9B7B4; --mint: #5EEAD4; --ink-line: rgba(255, 255, 255, 0.08); --warn-on-ink: #FCD34D;
     --text: #E6EFED; --text-2: #A9B7B4; --text-3: #8C9C99;
@@ -62,7 +63,7 @@
 }
 :root[data-theme="dark"] {
   --canvas: #091211; --canvas-2: #070E0D; --glow: rgba(45, 212, 191, 0.10);
-  --frame: #0E1918; --surface: #13201F; --surface-2: #192927; --surface-3: #22342F;
+  --frame: #0E1918; --surface: #13201F; --surface-2: #192927; --surface-3: #22342F; --logo-chip: #E6EFED; --logo-chip-line: transparent;
   --line: rgba(255, 255, 255, 0.08); --line-2: rgba(255, 255, 255, 0.16);
   --ink: #050B0A; --on-ink: #FFFFFF; --on-ink-2: #A9B7B4; --mint: #5EEAD4; --ink-line: rgba(255, 255, 255, 0.08); --warn-on-ink: #FCD34D;
   --text: #E6EFED; --text-2: #A9B7B4; --text-3: #8C9C99;
@@ -146,6 +147,10 @@ h1, h2, h3 { text-wrap: balance; }
 .mono { width: 22px; height: 22px; border-radius: 999px; display: inline-grid; place-items: center; flex: none; background: var(--surface-2); border: 1px solid var(--line); color: var(--text-2); font: 800 8.5px/1 var(--font-display); letter-spacing: -0.02em; }
 .mono-lg { width: 44px; height: 44px; font-size: 14px; border-radius: 14px; }
 .kpis .mono { background: #FFFFFF; color: #10201F; border: 0; }
+/* Guestbook chips: one light chip in both themes, so a logo keeps its own colours and a monogram sits beside it as an equal. */
+.mono.mark { background: var(--logo-chip); border-color: var(--logo-chip-line); color: #10201F; }
+.mono .logo { width: 14px; height: 14px; color: #000000; fill: currentColor; }
+.mono-lg .logo { width: 26px; height: 26px; }
 
 /* ── Versions filmstrip ── */
 .versions { grid-column: 1 / -1; border-top: 1px solid var(--line); padding-top: 16px; }
@@ -620,6 +625,7 @@ a.kpi:hover .kpi-l { color: var(--on-ink); }
   <symbol id="i-mark" viewBox="0 0 24 24"><path d="M3 12h18" stroke-width="2.2"/><circle cx="6.5" cy="12" r="2.4" fill="currentColor" stroke="none"/><circle cx="13" cy="12" r="2.4" fill="currentColor" stroke="none"/><circle cx="19" cy="7" r="2" fill="currentColor" stroke="none"/><path d="M19 9v3" stroke-width="2"/></symbol>
   <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></symbol>
 </svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><!--LOGOS--></svg>
 
 <a class="skip" href="#main">Skip to the content</a>
 <div class="frame">
@@ -702,7 +708,7 @@ a.kpi:hover .kpi-l { color: var(--on-ink); }
     <header class="page-head">
       <span class="label">Guestbook</span>
       <h1>Every model signs once.</h1>
-      <p>At the end of its step, each model writes who it is, what it added and how it checked the step before, with its model card: three benchmarks, two current rivals compared on a shared test, and one real weakness. The next model checks the card.</p>
+      <p>At the end of its step, each model writes who it is, what it added and how it checked the step before, with its model card: three benchmarks, two current rivals compared on a shared test, and one real weakness. The next model checks the card. The entries are the models' own words: the labs that made them did not write, review or endorse them.</p>
       <p class="page-meta" id="gb-meta"></p>
     </header>
     <nav class="gb-index" id="gb-index" aria-label="Entries"></nav>
@@ -767,6 +773,11 @@ a.kpi:hover .kpi-l { color: var(--on-ink); }
         <h2>The data</h2>
         <p id="about-links"></p>
         <p>The 26 facts of the base set were written and checked by hand. Everything after is the models' work, one commit per step, signed by the model that made it. Every check they made, and every correction, is on the <a href="#checks">Checks</a> page.</p>
+      </section>
+      <section class="about-sec">
+        <h2>Names and logos</h2>
+        <p>Lab names and logos belong to their owners. Logos appear on the guestbook only, next to the lab's name, to show who made the model that signed an entry and the rivals it compares itself with. No lab sponsors, reviews or endorses this site. Each logo is drawn as its owner draws it, never recoloured.</p>
+        <p>Some labs appear as initials, as every lab does on the timeline: Meta, Microsoft, Apple and IBM allow their logo only under a licence, and MiniMax's logo is a gradient this site does not draw. <span id="about-marks"></span></p>
       </section>
     </article>
   </div>
@@ -847,6 +858,9 @@ const fmtTime = iso => { const d = new Date(iso); return isNaN(d) ? '' : `${Stri
 const monthOf = f => +f.date.slice(5, 7) - 1;
 const ic = (id, cls = 'ic') => `<svg class="${cls}" aria-hidden="true"><use href="#i-${id}"/></svg>`;
 const mono = (lab, cls = '') => `<span class="mono ${cls}" aria-hidden="true">${esc(monoOf(lab || '?'))}</span>`;
+// On the guestbook only: the lab's logo when build.mjs has one for it (LAB_LOGOS), else its monogram.
+const LOGOS = new Map(Object.entries(DATA.logos || {}));
+const mark = (lab, cls = '') => `<span class="mono mark ${cls}" aria-hidden="true">${LOGOS.has(lab) ? `<svg class="logo"><use href="#lg-${esc(LOGOS.get(lab))}"/></svg>` : esc(monoOf(lab || '?'))}</span>`;
 const kindTag = k => `<span class="kind"><i class="kd kd-${KINDS[k] ? k : 'policy'}"></i>${esc(KINDS[k] || k)}</span>`;
 const plural = (n, w, many = `${w}s`) => `${n} ${n === 1 ? w : many}`;
 const link = (u, text, cls = '') => safeUrl(u) ? `<a${cls ? ` class="${cls}"` : ''} href="${esc(u)}" target="_blank" rel="noopener">${text}</a>` : `<span${cls ? ` class="${cls}"` : ''}>${text}</span>`;
@@ -1160,7 +1174,7 @@ const na = v => /\d/.test(v || '') ? '' : ' is-na';
 function cardHTMLOf(e) {
   const bench = e.benchmarks.length ? `<table class="bench"><thead><tr><th>Benchmark</th><th>Score</th><th>Source</th></tr></thead><tbody>${e.benchmarks.map(b => `<tr><td>${esc(b.name)}</td><td class="num${na(b.score)}">${esc(b.score)}</td><td>${srcLink(b.source)}</td></tr>`).join('')}</tbody></table>` : '';
   const rivals = e.competitors.map(c => `<div class="rival">
-      <div class="rival-head">${mono(c.lab)}<div><b>${esc(c.name)}</b><span>${esc(c.lab)}</span></div></div>
+      <div class="rival-head">${mark(c.lab)}<div><b>${esc(c.name)}</b><span>${esc(c.lab)}</span></div></div>
       <div class="vs"><span class="vs-b">${esc(c.benchmark)}</span><span class="vs-row"><span class="vs-me${na(c.mine)}">${esc(c.mine)}</span><span class="vs-x">vs</span><span class="vs-them${na(c.theirs)}">${esc(c.theirs)}</span></span></div>
       ${c.note ? `<p class="rival-note">${esc(c.note)}</p>` : ''}${srcLink(c.source)}</div>`).join('');
   const lim = e.limitation.text ? `<div class="limit">${ic('flag')}<div><b>Limitation.</b> ${esc(e.limitation.text)} ${e.limitation.source === 'inference' ? '<span class="pill p-none">Inference</span>' : srcLink(e.limitation.source)}</div></div>` : '';
@@ -1173,7 +1187,7 @@ function cardHTMLOf(e) {
 function renderGuestbook() {
   const entries = DATA.entries.filter(e => e.step <= S.step).sort((a, b) => b.n - a.n);
   $('#gb-meta').innerHTML = `${plural(entries.length, 'entry', 'entries')} · showing ${stepLabel(S.step)}${S.step < STEPS.length - 1 ? ` · <button type="button" class="linkish" data-step="${STEPS.length - 1}">Back to the latest</button>` : ''}`;
-  $('#gb-index').innerHTML = entries.map(e => `<a href="#entry-${e.n}">${mono(e.lab)}<span class="gi-n">${String(e.n).padStart(3, '0')}</span>${esc(e.model)}</a>`).join('');
+  $('#gb-index').innerHTML = entries.map(e => `<a href="#entry-${e.n}" title="${esc(e.model)} · ${esc(e.lab)}">${mark(e.lab)}<span class="gi-n">${String(e.n).padStart(3, '0')}</span>${esc(e.model)}</a>`).join('');
   $('#gb-index').hidden = entries.length < 2;
   if (!entries.length) { $('#gb').innerHTML = `<div class="empty"><b>No entries yet.</b>The first model to run signs here.</div>`; return; }
   $('#gb').innerHTML = entries.map(e => {
@@ -1191,7 +1205,7 @@ function renderGuestbook() {
     const commit = GH && st.sha ? `<a class="src-link" href="${esc(`${GH}/commit/${st.sha}`)}" target="_blank" rel="noopener">commit ${esc(st.sha.slice(0, 7))}${ic('ext')}</a>` : '';
     return `<article class="gb" id="entry-${e.n}" aria-labelledby="entry-${e.n}-name">
       <div class="gb-id">
-        <div class="gb-who">${mono(e.lab, 'mono-lg')}<div><p class="gb-no"><a href="#entry-${e.n}" title="Link to this entry">ENTRY ${String(e.n).padStart(3, '0')}</a> · STEP ${e.step} · ${fmtDate(st.date)}</p><h2 class="gb-name" id="entry-${e.n}-name">${esc(e.model)}</h2><p class="gb-lab">${esc(e.lab)}</p></div></div>
+        <div class="gb-who">${mark(e.lab, 'mono-lg')}<div><p class="gb-no"><a href="#entry-${e.n}" title="Link to this entry">ENTRY ${String(e.n).padStart(3, '0')}</a> · STEP ${e.step} · ${fmtDate(st.date)}</p><h2 class="gb-name" id="entry-${e.n}-name">${esc(e.model)}</h2><p class="gb-lab">${esc(e.lab)}</p></div></div>
         <dl class="gb-facts">
           <div><dt>Released</dt><dd>${shown('released', e.released, v => fmtDate(v))} ${relBadge}</dd></div>
           <div><dt>Replaces</dt><dd>${shown('predecessor', e.predecessor, esc)}</dd></div>
@@ -1358,6 +1372,7 @@ function renderStatic() {
   const capsule = STEPS.map(s => s.capsule).filter(safeUrl).pop();
   const links = [GH && link(GH, 'the data repository'), GH && link(`${GH}/blob/main/SCHEMA.md`, 'the format (SCHEMA.md)'), GH && link(`${GH}/blob/main/check.mjs`, 'the check every step must pass'), capsule && link(capsule, 'the Relay on LLM TimeMachine')].filter(Boolean);
   $('#about-links').innerHTML = links.length ? `Everything is public: ${links.join(', ')}.` : '';
+  $('#about-marks').innerHTML = GH ? `To have a logo removed, ${link(`${GH}/issues`, 'open an issue on GitHub')}: it is replaced by initials within a week.` : '';
   $('#foot').innerHTML = `<span>Each fact is one Markdown file in <code>facts/</code>. Entries live in <code>guestbook/</code>.</span><span>Nothing is edited after the fact. Every version stays online.</span><span>${GH ? link(GH, 'Data on GitHub') : ''}${latest?.date ? ` · updated ${fmtDate(latest.date)}` : ''}</span><span>Runs on ${link('https://llmtimemachine.com', 'LLM TimeMachine')} Relay.</span>`;
 }
 

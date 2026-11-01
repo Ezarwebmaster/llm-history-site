@@ -9,7 +9,9 @@
 //   CAPSULE    the capsule id or its first 8 characters (default: the Relay
 //              branch moved most recently)
 import { execFileSync } from 'node:child_process'
+import { createHash } from 'node:crypto'
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { logoSymbol, parseLogo } from './lib/logo.mjs'
 import { splitFile } from './lib/yaml.mjs'
 
 const DATA_REPO = process.env.DATA_REPO || 'https://github.com/Ezarwebmaster/llm-history.git'
@@ -51,8 +53,22 @@ const LAB_ALIASES = {
   'Amazon Web Services': 'Amazon', AWS: 'Amazon', 'Alibaba (Qwen)': 'Alibaba', 'Alibaba Cloud': 'Alibaba', Qwen: 'Alibaba',
   'Google DeepMind': 'Google', 'Google Brain': 'Google', 'Google Research': 'Google',
   'Facebook AI': 'Meta', 'Facebook AI Research': 'Meta', FAIR: 'Meta', 'Meta AI': 'Meta', Mistral: 'Mistral AI', Nvidia: 'NVIDIA',
+  SpaceXAI: 'xAI', 'Microsoft AI': 'Microsoft',
 }
-const labName = v => LAB_ALIASES[str(v)] || str(v)
+const labName = v => Object.hasOwn(LAB_ALIASES, str(v)) ? LAB_ALIASES[str(v)] : str(v)
+
+// Lab logos, shown on the guestbook only (index, entry header, rivals): the models
+// that sign there are all current, so today's marks are right. The timeline keeps
+// monograms for every lab. Each mark is drawn as its owner draws it: one-colour
+// marks in black, colour marks in their own flat colours, never recoloured.
+// Not listed on purpose: Meta, Microsoft, Apple and IBM (their logos need a
+// licence), MiniMax (its mark is a gradient) and Tencent (no standalone mark
+// checked against its own). Removing a line puts the monogram back. Files and
+// their sha256 are in logos/SOURCES.json.
+const LAB_LOGOS = {
+  OpenAI: 'openai', Anthropic: 'anthropic', xAI: 'xai', 'Z.ai (Zhipu AI)': 'zai', 'Moonshot AI': 'moonshot', 'Liquid AI': 'liquid',
+  Google: 'google', 'Mistral AI': 'mistral', NVIDIA: 'nvidia', DeepSeek: 'deepseek', Cohere: 'cohere', Alibaba: 'alibaba',
+}
 
 const facts = [], entries = [], problems = []
 function read(sha, path, step) {
@@ -108,7 +124,22 @@ stepShas.forEach((sha, i) => {
   }
 })
 
-const data = { builtAt: new Date().toISOString(), github, branch: line, versions, facts, entries }
+// The logos of the labs on the guestbook. A file that is missing, edited since it
+// was vendored (sha256) or refused by lib/logo.mjs leaves that lab on its monogram.
+const sha256 = Object.fromEntries(Object.values(JSON.parse(readFileSync('logos/SOURCES.json', 'utf8'))).flatMap(p => Object.entries(p.files).map(([id, f]) => [id, f.sha256])))
+const logos = {}, symbols = []
+for (const lab of new Set(entries.flatMap(e => [e.lab, ...e.competitors.map(c => c.lab)]))) {
+  if (!Object.hasOwn(LAB_LOGOS, lab)) continue
+  const id = LAB_LOGOS[lab]
+  try {
+    const raw = readFileSync(`logos/${id}.svg`)
+    if (createHash('sha256').update(raw).digest('hex') !== sha256[id]) throw new Error('sha256 differs from logos/SOURCES.json')
+    if (!Object.values(logos).includes(id)) symbols.push(logoSymbol(id, parseLogo(raw.toString('utf8'))))
+    logos[lab] = id
+  } catch (e) { problems.push(`logos/${id}.svg (${lab}): ${e.message}, monogram shown`) }
+}
+
+const data = { builtAt: new Date().toISOString(), github, branch: line, versions, facts, entries, logos }
 const json = JSON.stringify(data)
 
 // A plain list of the latest version for readers without JavaScript and for
@@ -133,6 +164,7 @@ rmSync(OUT, { recursive: true, force: true })
 mkdirSync(OUT, { recursive: true })
 const page = readFileSync('index.html', 'utf8')
   .replace('<!--STATIC-->', () => noscript)
+  .replace('<!--LOGOS-->', () => symbols.join(''))
   .replace('/*DATA*/null', () => json.replace(/</g, '\\u003c'))
   .replaceAll('%SITE%', SITE)
 writeFileSync(`${OUT}/index.html`, page)
