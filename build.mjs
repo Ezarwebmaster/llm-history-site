@@ -46,7 +46,12 @@ const stepShas = first === -1 ? [] : chain.slice(first).filter(sha => VIA.test(m
 
 // Lab names as the models spelled them, folded into one name per lab for the filters.
 // The file as written keeps its own spelling (the drawer shows it).
-const LAB_ALIASES = { Moonshot: 'Moonshot AI', 'Zhipu AI': 'Z.ai (Zhipu AI)', Zhipu: 'Z.ai (Zhipu AI)', 'Z.ai': 'Z.ai (Zhipu AI)', 'Amazon Web Services': 'Amazon', AWS: 'Amazon' }
+const LAB_ALIASES = {
+  Moonshot: 'Moonshot AI', MoonshotAI: 'Moonshot AI', 'Zhipu AI': 'Z.ai (Zhipu AI)', Zhipu: 'Z.ai (Zhipu AI)', 'Z.ai': 'Z.ai (Zhipu AI)',
+  'Amazon Web Services': 'Amazon', AWS: 'Amazon', 'Alibaba (Qwen)': 'Alibaba', 'Alibaba Cloud': 'Alibaba', Qwen: 'Alibaba',
+  'Google DeepMind': 'Google', 'Google Brain': 'Google', 'Google Research': 'Google',
+  'Facebook AI': 'Meta', 'Facebook AI Research': 'Meta', FAIR: 'Meta', 'Meta AI': 'Meta', Mistral: 'Mistral AI', Nvidia: 'NVIDIA',
+}
 const labName = v => LAB_ALIASES[str(v)] || str(v)
 
 const facts = [], entries = [], problems = []
