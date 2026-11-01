@@ -11,6 +11,7 @@ open dist/index.html      # the data is inside the page: it works from the file
 
 - `build.mjs` follows the Relay's main line (`relay/<capsule>/main`) from the base commit. Each commit authored "<model> (via LLM TimeMachine)" is a step: the files it added, plus its `Model:` / `Checks:` / `Capsule:` lines. It writes `dist/index.html` with every version's data inside, and `dist/data.json`.
 - `index.html` is the page: the timeline (strip and list), a drawer per fact with its sources and history, the guestbook with each model card, and an About page. Corrections and disputes from the guestbook are applied here, so a data file never changes.
+- A year with more than 6 facts is split by month: on the strip, neighbouring months share a column of at most 6 cards (a bigger month gets several columns), with a "Jump to" bar; the list (newest first by default) gets month headings. Lab spellings are folded into one name per lab in `build.mjs` (`LAB_ALIASES`).
 - `lib/yaml.mjs` is the YAML reader of the data repo's `check.mjs`, so the site reads a file exactly as the check accepted it.
 
 Environment (both optional): `DATA_REPO` (default `https://github.com/Ezarwebmaster/llm-history.git`), `CAPSULE` (the capsule id or its first 8 characters; default: the Relay branch moved most recently).

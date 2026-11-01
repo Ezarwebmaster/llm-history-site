@@ -44,6 +44,11 @@ const first = chain.findIndex(sha => VIA.test(meta(sha).author))
 const baseSha = first === -1 ? chain.at(-1) : chain[first - 1]
 const stepShas = first === -1 ? [] : chain.slice(first).filter(sha => VIA.test(meta(sha).author))
 
+// Lab names as the models spelled them, folded into one name per lab for the filters.
+// The file as written keeps its own spelling (the drawer shows it).
+const LAB_ALIASES = { Moonshot: 'Moonshot AI', 'Zhipu AI': 'Z.ai (Zhipu AI)', Zhipu: 'Z.ai (Zhipu AI)', 'Z.ai': 'Z.ai (Zhipu AI)', 'Amazon Web Services': 'Amazon', AWS: 'Amazon' }
+const labName = v => LAB_ALIASES[str(v)] || str(v)
+
 const facts = [], entries = [], problems = []
 function read(sha, path, step) {
   const raw = git('show', `${sha}:${path}`)
@@ -54,7 +59,7 @@ function read(sha, path, step) {
     const [happened = '', matters = ''] = parsed.body.split(/^##\s*why it matters\s*$/im).map(s => s.replace(/^##\s*what happened\s*$/im, '').trim())
     facts.push({
       id: path.slice(6, -3), step, file: path,
-      title: str(d.title), date: str(d.date), precision: str(d.date_precision) || 'day', lab: str(d.lab), kind: str(d.kind),
+      title: str(d.title), date: str(d.date), precision: str(d.date_precision) || 'day', lab: labName(d.lab), kind: str(d.kind),
       open_weights: typeof d.open_weights === 'boolean' ? d.open_weights : null, about_me: d.about_me === true,
       short: str(d.short), specs: obj(d.specs), note: str(d.note),
       sources: list(d.sources).map(s => ({ url: str(s?.url), title: str(s?.title), primary: s?.primary === true })),
@@ -63,10 +68,10 @@ function read(sha, path, step) {
   } else if (path.startsWith('guestbook/')) {
     entries.push({
       n: Number(d.entry) || Number(path.slice(10, 13)), step, file: path,
-      model: str(d.model), lab: str(d.lab), released: str(d.released), predecessor: str(d.predecessor),
+      model: str(d.model), lab: labName(d.lab), released: str(d.released), predecessor: str(d.predecessor),
       knowledge_cutoff: str(d.knowledge_cutoff), good_at: str(d.good_at), note: str(d.note),
       benchmarks: list(d.benchmarks).map(b => ({ name: str(b?.name), score: str(b?.score), source: str(b?.source) })),
-      competitors: list(d.competitors).map(c => ({ name: str(c?.name), lab: str(c?.lab), benchmark: str(c?.benchmark), mine: str(c?.mine), theirs: str(c?.theirs), source: str(c?.source), note: str(c?.note) })),
+      competitors: list(d.competitors).map(c => ({ name: str(c?.name), lab: labName(c?.lab), benchmark: str(c?.benchmark), mine: str(c?.mine), theirs: str(c?.theirs), source: str(c?.source), note: str(c?.note) })),
       limitation: { text: str(d.limitation?.text), source: str(d.limitation?.source) },
       sources: list(d.sources).map(s => ({ url: str(s?.url), title: str(s?.title) })),
       added: list(d.added).map(String),
@@ -104,8 +109,15 @@ const json = JSON.stringify(data)
 // A plain list of the latest version for readers without JavaScript and for
 // search engines. The app replaces it.
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]))
-const shown = facts.slice().sort((a, b) => a.date.localeCompare(b.date))
-const noscript = `<section class="static"><h2>Timeline · ${shown.length} facts</h2><ol>${shown.map(f => `<li><b>${esc(f.date.slice(0, f.precision === 'year' ? 4 : 10))} · ${esc(f.title)}</b> (${esc(f.lab)}). ${esc(f.short)} ${f.sources.filter(s => /^https:\/\//.test(s.url)).map(s => `<a href="${esc(s.url)}" rel="noopener">${esc(s.title || 'Source')}</a>`).join(' · ')}</li>`).join('')}</ol>
+// With the guestbook's corrections applied, as the page shows them.
+const fixedDate = new Map(), flag = new Map()
+for (const e of entries.slice().sort((a, b) => a.step - b.step)) for (const c of e.checked) {
+  if (!c.fact) continue
+  if (c.verdict === 'corrected' && c.field === 'date' && /^\d{4}-\d{2}-\d{2}$/.test(c.now)) fixedDate.set(c.fact, c.now)
+  if (c.verdict === 'disputed' || c.verdict === 'corrected') flag.set(c.fact, flag.get(c.fact) === 'disputed' ? 'disputed' : c.verdict)
+}
+const shown = facts.map(f => ({ ...f, date: fixedDate.get(f.id) || f.date })).sort((a, b) => a.date.localeCompare(b.date))
+const noscript = `<section class="static"><h2>Timeline · ${shown.length} facts</h2><ol>${shown.map(f => `<li><b>${esc(f.date.slice(0, f.precision === 'year' ? 4 : 10))} · ${esc(f.title)}</b> (${esc(f.lab)}${flag.has(f.id) ? `, ${flag.get(f.id)} by a later model` : ''}). ${esc(f.short)} ${f.sources.filter(s => /^https:\/\//.test(s.url)).map(s => `<a href="${esc(s.url)}" rel="noopener">${esc(s.title || 'Source')}</a>`).join(' · ')}</li>`).join('')}</ol>
 <h2>Guestbook · ${entries.length} entries</h2><ol>${entries.slice().sort((a, b) => a.n - b.n).map(e => `<li><b>Entry ${e.n} · ${esc(e.model)}</b> (${esc(e.lab)}). ${esc(e.body)}</li>`).join('')}</ol></section>`
 
 rmSync(OUT, { recursive: true, force: true })
