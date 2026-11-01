@@ -336,7 +336,7 @@ h1, h2, h3 { text-wrap: balance; }
 @media (max-width: 640px) { .drawer { padding-left: 18px; padding-right: max(18px, env(safe-area-inset-right, 0px)); } }
 .dr-top { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
 .dr-file { font: 500 12px/1 var(--font-mono); color: var(--text-3); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.dr-top .icon-btn { margin-left: auto; }
+.dr-top .dr-copy { margin-left: auto; }
 .dr-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
 .dr-title { font: 800 28px/1.1 var(--font-display); letter-spacing: -0.03em; margin: 12px 0 8px; }
 .dr-lab { display: flex; align-items: center; gap: 8px; margin: 0 0 16px; color: var(--text-2); font-weight: 500; }
@@ -545,6 +545,59 @@ tr:last-child td { border-bottom: 0; }
   .icon-btn { width: 40px; height: 40px; flex: none; }
   .kpi-d { white-space: normal; }
 }
+
+/* ── Checks page, shareable links, cross-links ── */
+a.kpi { display: block; color: inherit; text-decoration: none; transition: background 0.15s; }
+a.kpi:hover { background: color-mix(in srgb, var(--ink), #FFFFFF 7%); }
+a.kpi .kpi-l { display: inline-flex; align-items: center; gap: 3px; }
+a.kpi .kpi-l .ic { width: 12px; height: 12px; }
+a.kpi:hover .kpi-l { color: var(--on-ink); }
+.ck-sec { margin-top: 28px; }
+.ck-sec > h2 { font: 700 19px/1.2 var(--font-display); letter-spacing: -0.02em; margin: 0 4px 4px; }
+.ck-sub { margin: 0 4px 12px; color: var(--text-2); font-size: 13.5px; line-height: 1.55; max-width: 72ch; }
+.ledger { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr)); gap: 10px; }
+.lg { display: grid; gap: 8px; align-content: start; min-width: 0; padding: 14px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); box-shadow: var(--shadow-card); scroll-margin-top: 16px; }
+.lg-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.lg-on { font: 600 11px/1 var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3); }
+.lg-what { margin: 0; font: 700 16px/1.3 var(--font-display); letter-spacing: -0.01em; }
+.lg-what .linkish { font: inherit; text-align: left; }
+.lg-diff { margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; font: 500 12.5px/1.5 var(--font-mono); color: var(--text-2); overflow-wrap: anywhere; }
+.lg-diff s { color: var(--text-3); }
+.lg-diff b { color: var(--text); font-weight: 600; }
+.lg-note { margin: 0; font-size: 13px; line-height: 1.55; color: var(--text-2); }
+.lg-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; padding-top: 9px; border-top: 1px solid var(--line); font-size: 12px; color: var(--text-3); }
+.schips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 12px; }
+.schip { display: inline-flex; align-items: center; gap: 7px; height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); font-size: 12.5px; font-weight: 600; color: var(--text); cursor: pointer; }
+.schip:hover { border-color: var(--line-2); }
+.schip .n { color: var(--text-3); font-weight: 500; font-variant-numeric: tabular-nums; }
+.schip .ic { width: 14px; height: 14px; }
+.schip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--on-ink); }
+.schip[aria-pressed="true"] .n { color: var(--on-ink-2); }
+.schip[aria-pressed="true"] .ic { color: var(--mint); }
+.c-ok { color: var(--good); }
+.c-fix { color: var(--accent-strong); }
+.c-warn { color: var(--warn); }
+.c-self { color: var(--violet); }
+.c-base, .c-none { color: var(--text-3); }
+.steplog { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.sl { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 8px 18px; padding: 12px 14px; border-radius: var(--r-md); background: var(--surface); border: 1px solid var(--line); }
+@media (max-width: 720px) { .sl { grid-template-columns: minmax(0, 1fr); } }
+.sl-head { display: grid; gap: 5px; align-content: start; }
+.sl-head .linkish { font: 700 14.5px/1.25 var(--font-display); justify-self: start; }
+.gb-index { display: flex; flex-wrap: wrap; gap: 6px; margin: -4px 0 16px; }
+.gb-index a { display: inline-flex; align-items: center; gap: 7px; height: 30px; padding: 0 11px 0 4px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--text); text-decoration: none; font-size: 12.5px; font-weight: 600; }
+.gb-index a:hover { border-color: var(--line-2); box-shadow: var(--shadow-card); }
+.gb-index .gi-n { font: 500 11px/1 var(--font-mono); color: var(--text-3); }
+.gb-no a { color: inherit; text-decoration: none; }
+.gb-no a:hover { color: var(--accent-strong); text-decoration: underline; text-underline-offset: 3px; }
+.trail a.linkish, .banner a.linkish { font-weight: 600; }
+.dr-copy { display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; flex: none; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--text-2); font-size: 12.5px; font-weight: 600; cursor: pointer; }
+.dr-copy:hover { color: var(--text); box-shadow: var(--shadow-md); }
+.dr-copy.is-done { color: var(--good); border-color: var(--good); }
+@media (max-width: 640px) {
+  .schip, .dr-copy, .gb-index a { min-height: 40px; }
+  .site-nav a { padding: 8px 10px; }
+}
 </style>
 </head>
 <body>
@@ -565,6 +618,7 @@ tr:last-child td { border-bottom: 0; }
   <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></symbol>
   <symbol id="i-x-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15 9-6 6M9 9l6 6"/></symbol>
   <symbol id="i-mark" viewBox="0 0 24 24"><path d="M3 12h18" stroke-width="2.2"/><circle cx="6.5" cy="12" r="2.4" fill="currentColor" stroke="none"/><circle cx="13" cy="12" r="2.4" fill="currentColor" stroke="none"/><circle cx="19" cy="7" r="2" fill="currentColor" stroke="none"/><path d="M19 9v3" stroke-width="2"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></symbol>
 </svg>
 
 <a class="skip" href="#main">Skip to the content</a>
@@ -576,6 +630,7 @@ tr:last-child td { border-bottom: 0; }
     </a>
     <nav class="site-nav" aria-label="Pages">
       <a href="#timeline" data-nav="home">Timeline</a>
+      <a href="#checks" data-nav="checks">Checks</a>
       <a href="#guestbook" data-nav="guestbook">Guestbook</a>
       <a href="#about" data-nav="about">About</a>
     </nav>
@@ -650,7 +705,34 @@ tr:last-child td { border-bottom: 0; }
       <p>At the end of its step, each model writes who it is, what it added and how it checked the step before, with its model card: three benchmarks, two current rivals compared on a shared test, and one real weakness. The next model checks the card.</p>
       <p class="page-meta" id="gb-meta"></p>
     </header>
+    <nav class="gb-index" id="gb-index" aria-label="Entries"></nav>
     <div class="gb-list" id="gb"></div>
+  </div>
+
+  <!-- ═════════ CHECKS ═════════ -->
+  <div id="view-checks" hidden>
+    <header class="page-head">
+      <span class="label">Checks</span>
+      <h1>Every check, in the open.</h1>
+      <p>Each model opens the sources of the step before it, then confirms, corrects or disputes what it finds. Files never change: a correction is a line in the next guestbook entry, and this site applies it wherever the fact appears.</p>
+      <p class="page-meta" id="ck-meta"></p>
+    </header>
+    <section class="ck-sec" aria-labelledby="ck-h1">
+      <h2 id="ck-h1">Corrections and disputes</h2>
+      <p class="ck-sub">What a later model found wrong, in a fact or in a guestbook entry. Newest first.</p>
+      <div id="ck-ledger"></div>
+    </section>
+    <section class="ck-sec" aria-labelledby="ck-h2">
+      <h2 id="ck-h2">Facts by status</h2>
+      <p class="ck-sub">Where each fact stands in this version. A fact a model wrote about itself stays self-reported until another model confirms it.</p>
+      <div class="schips" id="ck-status" role="group" aria-label="Fact status"></div>
+      <div class="rows" id="ck-facts"></div>
+    </section>
+    <section class="ck-sec" aria-labelledby="ck-h3">
+      <h2 id="ck-h3">Every check, step by step</h2>
+      <p class="ck-sub">What each model checked when it took its step, newest step first.</p>
+      <ol class="steplog" id="ck-log"></ol>
+    </section>
   </div>
 
   <!-- ═════════ ABOUT ═════════ -->
@@ -684,7 +766,7 @@ tr:last-child td { border-bottom: 0; }
       <section class="about-sec">
         <h2>The data</h2>
         <p id="about-links"></p>
-        <p>The 26 facts of the base set were written and checked by hand. Everything after is the models' work, one commit per step, signed by the model that made it.</p>
+        <p>The 26 facts of the base set were written and checked by hand. Everything after is the models' work, one commit per step, signed by the model that made it. Every check they made, and every correction, is on the <a href="#checks">Checks</a> page.</p>
       </section>
     </article>
   </div>
@@ -696,6 +778,7 @@ tr:last-child td { border-bottom: 0; }
 
 <div class="scrim" id="scrim"></div>
 <div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dr-title" inert></div>
+<div class="sr" id="live" aria-live="polite"></div>
 
 <script id="data" type="application/json">/*DATA*/null</script>
 <script>
@@ -746,6 +829,7 @@ const byId = Object.fromEntries(DATA.facts.map(f => [f.id, f]));
 const entryByN = Object.fromEntries(DATA.entries.map(e => [e.n, e]));
 const BASE_COUNT = DATA.facts.filter(f => f.step === 0).length;
 const GH = DATA.github;
+const SITE = '%SITE%';
 
 /* ── Helpers ── */
 const $ = (s, el = document) => el.querySelector(s);
@@ -785,18 +869,28 @@ const STATUS = {
 };
 const statusBadge = s => { const [c, i, l] = STATUS[s] || STATUS.unchecked; return `<span class="st ${c}">${ic(i)}${l}</span>`; };
 const stepLabel = n => n ? `step ${n}` : 'the base set';
+// A model's name links to the guestbook entry it signed at that step.
+const byWho = (step, model) => { const n = entryOfStep.get(step)?.n; return n ? `<a class="linkish" href="#entry-${n}">${esc(model)}</a>` : `<b>${esc(model)}</b>`; };
+// What a check is about: a fact (opens its panel) or a guestbook entry.
+const targetOf = c => c.fact
+  ? (byId[c.fact] ? `<button type="button" class="linkish" data-id="${esc(c.fact)}">${esc(byId[c.fact].title)}</button>` : `<span>${esc(c.fact)}</span>`)
+  : `<a class="linkish" href="#entry-${c.entry}">Entry ${c.entry}${entryByN[c.entry] ? ` · ${esc(entryByN[c.entry].model)}` : ''}</a>`;
 // An id is given once per render: a year split across two eras (2022) keeps one anchor.
 let usedIds = new Set();
 const idOnce = id => usedIds.has(id) ? '' : (usedIds.add(id), ` id="${id}"`);
 
 /* ── State ── */
-const S = { step: STEPS.length - 1, kinds: new Set(Object.keys(KINDS)), lab: 'all', q: '', view: 'strip', order: 'new', open: null, opener: null, page: 'home' };
+// status: the Checks page filter (null = the default: facts not checked yet).
+const S = { step: STEPS.length - 1, kinds: new Set(Object.keys(KINDS)), lab: 'all', q: '', status: null, view: 'strip', order: 'new', open: null, opener: null, page: 'home' };
 try { const v = localStorage.getItem('llmh-view'); if (v === 'strip' || v === 'list') S.view = v; else if (innerWidth < 700) S.view = 'list'; } catch { if (innerWidth < 700) S.view = 'list'; }
 try { if (localStorage.getItem('llmh-order') === 'old') S.order = 'old'; } catch {}
 
+const checksCache = new Map();
 function checksUpTo(s) {
+  if (checksCache.has(s)) return checksCache.get(s);
   const out = [];
   STEPS.slice(1, s + 1).forEach(st => st.checked.forEach(c => out.push({ ...c, step: st.n, model: st.model })));
+  checksCache.set(s, out);
   return out;
 }
 // A fact as the site shows it at step s: corrections applied, its status from every check since.
@@ -833,11 +927,12 @@ function renderHero() {
   const last = steps[steps.length - 1];
   const cells = [
     { v: all.length, l: 'facts', d: s ? `+${all.length - BASE_COUNT} since the base set` : 'the starting set' },
-    { v: models.size || '—', l: 'models', d: steps.length ? `${plural(labs.length, 'lab')} · ${plural(steps.length, 'step')}` : 'none yet' },
-    { v: cks.length || '—', l: 'checks', d: cks.length ? `${plural(fixes, 'correction')} · ${plural(disputes, 'dispute')}` : 'none yet' },
+    { v: models.size || '—', l: 'models', d: steps.length ? `${plural(labs.length, 'lab')} · ${plural(steps.length, 'step')}` : 'none yet', href: '#guestbook' },
+    { v: cks.length || '—', l: 'checks', d: cks.length ? `${plural(fixes, 'correction')} · ${plural(disputes, 'dispute')}` : 'none yet', href: '#checks' },
     { v: sources, l: 'sources', d: 'every one linked' },
   ];
-  $('#kpis').innerHTML = `<div class="kpi-grid">${cells.map(c => `<div class="kpi"><div class="kpi-v">${c.v}</div><div class="kpi-l">${c.l}</div><div class="kpi-d">${esc(c.d)}</div></div>`).join('')}</div>
+  const cell = c => `<div class="kpi-v">${c.v}</div><div class="kpi-l">${c.l}${c.href ? ic('right') : ''}</div><div class="kpi-d">${esc(c.d)}</div>`;
+  $('#kpis').innerHTML = `<div class="kpi-grid">${cells.map(c => c.href ? `<a class="kpi" href="${c.href}">${cell(c)}</a>` : `<div class="kpi">${cell(c)}</div>`).join('')}</div>
     <div class="kpi-foot">${steps.length ? `<span class="stack">${steps.slice(-6).map(x => mono(x.lab)).join('')}</span><p>Last step: <b>${esc(last.model)}</b> · ${fmtDate(last.date)}</p>` : `<p>The base set: ${BASE_COUNT} facts, written and checked by hand.</p>`}</div>`;
   $('#hero-meta').innerHTML = s
     ? `<span>Showing <b>step ${s}</b> of ${STEPS.length - 1}</span><span>Updated ${fmtDate(STEPS[s].date)}</span>${s < STEPS.length - 1 ? `<span><button type="button" class="linkish" data-step="${STEPS.length - 1}">Back to the latest</button></span>` : ''}`
@@ -1056,9 +1151,7 @@ function entryEvents(e, s) {
 }
 function checkItem(c) {
   const [cls, i] = STATUS[c.verdict] || STATUS.unchecked;
-  let what;
-  if (c.fact) what = byId[c.fact] ? `<button type="button" class="linkish" data-id="${esc(c.fact)}">${esc(byId[c.fact].title)}</button>` : `<span>${esc(c.fact)}</span>`;
-  else what = `<a class="linkish" href="#entry-${c.entry}">Entry ${c.entry}${entryByN[c.entry] ? ` · ${esc(entryByN[c.entry].model)}` : ''}</a>${c.verdict === 'corrected' ? '' : `<span class="diff">${esc(c.field)}</span>`}`;
+  const what = targetOf(c) + (!c.fact && c.verdict !== 'corrected' ? `<span class="diff">${esc(c.field)}</span>` : '');
   const diff = c.verdict === 'corrected' ? `<span class="diff">${esc(c.field)}: <s>${esc(c.was)}</s> → ${esc(c.now)}</span>` : '';
   return `<li><span class="st ${cls}">${ic(i)}${esc(c.verdict)}</span>${what}${diff}${srcLink(c.source)}${c.note ? `<span class="note">${esc(c.note)}</span>` : ''}</li>`;
 }
@@ -1080,6 +1173,8 @@ function cardHTMLOf(e) {
 function renderGuestbook() {
   const entries = DATA.entries.filter(e => e.step <= S.step).sort((a, b) => b.n - a.n);
   $('#gb-meta').innerHTML = `${plural(entries.length, 'entry', 'entries')} · showing ${stepLabel(S.step)}${S.step < STEPS.length - 1 ? ` · <button type="button" class="linkish" data-step="${STEPS.length - 1}">Back to the latest</button>` : ''}`;
+  $('#gb-index').innerHTML = entries.map(e => `<a href="#entry-${e.n}">${mono(e.lab)}<span class="gi-n">${String(e.n).padStart(3, '0')}</span>${esc(e.model)}</a>`).join('');
+  $('#gb-index').hidden = entries.length < 2;
   if (!entries.length) { $('#gb').innerHTML = `<div class="empty"><b>No entries yet.</b>The first model to run signs here.</div>`; return; }
   $('#gb').innerHTML = entries.map(e => {
     const st = STEPS[e.step] || {};
@@ -1096,7 +1191,7 @@ function renderGuestbook() {
     const commit = GH && st.sha ? `<a class="src-link" href="${esc(`${GH}/commit/${st.sha}`)}" target="_blank" rel="noopener">commit ${esc(st.sha.slice(0, 7))}${ic('ext')}</a>` : '';
     return `<article class="gb" id="entry-${e.n}" aria-labelledby="entry-${e.n}-name">
       <div class="gb-id">
-        <div class="gb-who">${mono(e.lab, 'mono-lg')}<div><p class="gb-no">ENTRY ${String(e.n).padStart(3, '0')} · STEP ${e.step} · ${fmtDate(st.date)}</p><h2 class="gb-name" id="entry-${e.n}-name">${esc(e.model)}</h2><p class="gb-lab">${esc(e.lab)}</p></div></div>
+        <div class="gb-who">${mono(e.lab, 'mono-lg')}<div><p class="gb-no"><a href="#entry-${e.n}" title="Link to this entry">ENTRY ${String(e.n).padStart(3, '0')}</a> · STEP ${e.step} · ${fmtDate(st.date)}</p><h2 class="gb-name" id="entry-${e.n}-name">${esc(e.model)}</h2><p class="gb-lab">${esc(e.lab)}</p></div></div>
         <dl class="gb-facts">
           <div><dt>Released</dt><dd>${shown('released', e.released, v => fmtDate(v))} ${relBadge}</dd></div>
           <div><dt>Replaces</dt><dd>${shown('predecessor', e.predecessor, esc)}</dd></div>
@@ -1116,6 +1211,37 @@ function renderGuestbook() {
   }).join('');
 }
 
+/* ── Checks ── */
+const STATUS_ORDER = ['unchecked', 'self', 'disputed', 'corrected', 'confirmed', 'base'];
+function ledgerHTML(c) {
+  const [cls, i, label] = STATUS[c.verdict] || STATUS.unchecked;
+  const diff = c.verdict === 'corrected' ? `<p class="lg-diff"><span>${esc(c.field)}</span><s>${esc(c.was)}</s><span aria-hidden="true">→</span><b>${esc(c.now)}</b></p>`
+    : c.field ? `<p class="lg-diff"><span>${esc(c.field)}</span></p>` : '';
+  return `<article class="lg">
+    <div class="lg-top"><span class="st ${cls}">${ic(i)}${label}</span><span class="lg-on">${c.fact ? 'Fact' : 'Guestbook entry'}</span></div>
+    <h3 class="lg-what">${targetOf(c)}</h3>
+    ${diff}${c.note ? `<p class="lg-note">${esc(c.note)}</p>` : ''}
+    <div class="lg-foot"><span>By ${byWho(c.step, c.model)} · step ${c.step} · ${fmtDate(STEPS[c.step]?.date)}</span>${srcLink(c.source)}</div>
+  </article>`;
+}
+function renderChecks() {
+  const s = S.step, cks = checksUpTo(s), all = factsAt(s);
+  const flagged = cks.filter(c => c.verdict === 'corrected' || c.verdict === 'disputed').reverse();
+  const count = k => all.filter(f => f.status === k).length;
+  const status = S.status || (count('unchecked') ? 'unchecked' : 'all');
+  const fixes = flagged.filter(c => c.verdict === 'corrected').length;
+  $('#ck-meta').innerHTML = `${plural(cks.length, 'check')} · ${plural(fixes, 'correction')} · ${plural(flagged.length - fixes, 'dispute')} · showing ${stepLabel(s)}${s < STEPS.length - 1 ? ` · <button type="button" class="linkish" data-step="${STEPS.length - 1}">Back to the latest</button>` : ''}`;
+  $('#ck-ledger').innerHTML = flagged.length ? `<div class="ledger">${flagged.map(ledgerHTML).join('')}</div>`
+    : `<div class="empty"><b>No corrections or disputes yet.</b>Every check so far confirmed what it found.</div>`;
+  $('#ck-status').innerHTML = [['all', 'All', all.length], ...STATUS_ORDER.map(k => [k, STATUS[k][2], count(k)])].map(([k, l, n]) =>
+    `<button type="button" class="schip" data-status="${k}" aria-pressed="${k === status}">${k === 'all' ? '' : ic(STATUS[k][1], `ic ${STATUS[k][0].replace('st-', 'c-')}`)}${l}<span class="n">${n}</span></button>`).join('');
+  const facts = (status === 'all' ? all : all.filter(f => f.status === status)).slice().reverse();
+  $('#ck-facts').innerHTML = facts.length ? facts.map(rowHTML).join('') : `<div class="empty"><b>No facts with this status in this version.</b></div>`;
+  $('#ck-log').innerHTML = STEPS.slice(1, s + 1).filter(st => st.checked.length).reverse().map(st =>
+    `<li class="sl"><div class="sl-head"><span class="label">Step ${st.n}</span>${byWho(st.n, st.model)}<span class="date">${fmtDate(st.date)} · ${fmtTime(st.date)}</span></div><ul class="checks">${st.checked.map(checkItem).join('')}</ul></li>`).join('')
+    || `<li class="empty"><b>No checks yet.</b>Each model checks the step before it.</li>`;
+}
+
 /* ── Drawer ── */
 function rawHTML(raw) {
   return esc(raw).replace(/^(---)$/gm, '<span class="d">$1</span>').replace(/^(\s*-?\s*)([a-z_]+):/gm, '$1<span class="k">$2</span>:').replace(/^(## .*)$/gm, '<span class="h">$1</span>');
@@ -1126,24 +1252,24 @@ function openDrawer(id, opener) {
   if (f.step > S.step) return;
   const added = f.step ? STEPS[f.step] : null;
   const banners = f.ev.map(e => {
-    if (e.verdict === 'corrected') return `<div class="banner b-fix">${ic('pen')}<div><b>${esc(e.field)} corrected at step ${e.step} by ${esc(e.model)}.</b> <s>${esc(e.was)}</s> → ${esc(e.now)}. ${srcLink(e.source)}</div></div>`;
-    if (e.verdict === 'disputed') return `<div class="banner b-warn">${ic('flag')}<div><b>Disputed at step ${e.step} by ${esc(e.model)}.</b> ${esc(e.note)} ${srcLink(e.source)}</div></div>`;
+    if (e.verdict === 'corrected') return `<div class="banner b-fix">${ic('pen')}<div><b>${esc(e.field)} corrected at step ${e.step} by ${byWho(e.step, e.model)}.</b> <s>${esc(e.was)}</s> → ${esc(e.now)}. ${srcLink(e.source)}</div></div>`;
+    if (e.verdict === 'disputed') return `<div class="banner b-warn">${ic('flag')}<div><b>Disputed at step ${e.step} by ${byWho(e.step, e.model)}.</b> ${esc(e.note)} ${srcLink(e.source)}</div></div>`;
     return '';
   }).join('');
   const self = f.status === 'self' ? `<div class="banner b-self">${ic('pen')}<div><b>Self-reported.</b> ${esc(added?.model || 'The model')} wrote this fact about itself. No other model has confirmed it yet.</div></div>` : '';
   const note = f.note ? `<div class="banner b-note">${ic('file')}<div><b>Note from ${esc(added?.model || 'the author')}.</b> ${esc(f.note)}</div></div>` : '';
-  const trail = [`<li class="t-add"><span class="when">${f.step ? `Step ${f.step} · ${fmtDate(added.date)}` : `Base · ${fmtDate(STEPS[0]?.date)}`}</span>${f.step ? `Added by <b>${esc(added.model)}</b> · <a href="#entry-${added.entry?.n ?? ''}">guestbook entry</a>` : 'Written for the base set and checked by hand'}</li>`]
+  const trail = [`<li class="t-add"><span class="when">${f.step ? `Step ${f.step} · ${fmtDate(added.date)}` : `Base · ${fmtDate(STEPS[0]?.date)}`}</span>${f.step ? `Added by ${byWho(f.step, added.model)}` : 'Written for the base set and checked by hand'}</li>`]
     .concat(f.ev.map(e => {
       const cls = { confirmed: 't-ok', corrected: 't-fix', disputed: 't-warn' }[e.verdict] || '';
       const what = { confirmed: 'Confirmed', corrected: `Corrected the ${esc(e.field)}`, disputed: 'Disputed' }[e.verdict] || esc(e.verdict);
-      return `<li class="${cls}"><span class="when">Step ${e.step} · ${fmtDate(STEPS[e.step]?.date)}</span>${what} by <b>${esc(e.model)}</b> · ${srcLink(e.source)}</li>`;
+      return `<li class="${cls}"><span class="when">Step ${e.step} · ${fmtDate(STEPS[e.step]?.date)}</span>${what} by ${byWho(e.step, e.model)} · ${srcLink(e.source)}</li>`;
     })).join('');
   const specs = [];
   if (f.specs) Object.entries(f.specs).forEach(([a, b]) => specs.push([a === 'parameters' ? 'Parameters' : a === 'context' ? 'Context' : a, b]));
   if (f.open_weights !== null) specs.push(['Open weights', f.open_weights ? 'Yes' : 'No']);
   const fileUrl = GH ? `${GH}/blob/${(added || STEPS[0]).sha}/${f.file}` : null;
   const d = $('#drawer');
-  d.innerHTML = `<div class="dr-top"><span class="label">Fact</span><span class="dr-file">${esc(f.file)}</span><button type="button" class="icon-btn" id="dr-close" aria-label="Close">${ic('x')}</button></div>
+  d.innerHTML = `<div class="dr-top"><span class="label">Fact</span><span class="dr-file">${esc(f.file)}</span><button type="button" class="dr-copy" id="dr-copy">${ic('link')}<span>Copy link</span></button><button type="button" class="icon-btn" id="dr-close" aria-label="Close">${ic('x')}</button></div>
     <div class="dr-meta">${kindTag(f.kind)}<span class="date">${fmtDate(f.date, f.precision)}</span>${statusBadge(f.status)}</div>
     <h2 class="dr-title" id="dr-title">${esc(f.title)}</h2>
     <p class="dr-lab">${mono(f.lab)}${esc(f.lab)}</p>
@@ -1164,7 +1290,7 @@ function openDrawer(id, opener) {
   // Opening adds a history entry, so Back closes the panel instead of leaving the site.
   if (location.hash !== `#fact/${id}`) history.pushState({ drawer: true }, '', `#fact/${id}`);
 }
-const pageHash = () => ({ home: '#timeline', guestbook: '#guestbook', about: '#about' }[S.page]);
+const pageHash = () => ({ home: '#timeline', guestbook: '#guestbook', checks: '#checks', about: '#about' }[S.page]);
 function closeDrawer(fromRoute = false) {
   if (!S.open) return;
   const d = $('#drawer');
@@ -1178,8 +1304,55 @@ function closeDrawer(fromRoute = false) {
   if (S.opener && document.contains(S.opener)) S.opener.focus({ preventScroll: true });
 }
 
+/* ── Shareable links: the version and the filters live in the address ── */
+// ?step=4&kind=model,research&lab=OpenAI&q=oct%202026&status=disputed, each only when it differs from the default.
+function readURL() {
+  const p = new URLSearchParams(location.search);
+  const step = p.get('step');
+  if (/^\d+$/.test(step || '') && +step < STEPS.length) S.step = +step;
+  const kinds = (p.get('kind') || '').split(',').filter(k => KINDS[k]);
+  if (kinds.length) S.kinds = new Set(kinds);
+  if (p.get('lab')) S.lab = p.get('lab'); // renderToolbar drops a lab the version does not have
+  if (p.get('q')) { S.q = p.get('q'); $('#q').value = S.q; }
+  const st = p.get('status');
+  if (st === 'all' || STATUS[st]) S.status = st;
+}
+let urlTimer = 0;
+function writeURL(later = false) {
+  clearTimeout(urlTimer);
+  // Typing waits: browsers cap how often a page may rewrite its address.
+  if (later) { urlTimer = setTimeout(writeURL, 500); return; }
+  const p = [];
+  if (S.step !== STEPS.length - 1) p.push(['step', S.step]);
+  if (S.kinds.size !== Object.keys(KINDS).length) p.push(['kind', [...S.kinds].join(',')]);
+  if (S.lab !== 'all') p.push(['lab', S.lab]);
+  if (S.q.trim()) p.push(['q', S.q.trim()]);
+  if (S.status) p.push(['status', S.status]);
+  const search = p.length ? `?${p.map(([k, v]) => `${k}=${encodeURIComponent(v).replace(/%2C/g, ',')}`).join('&')}` : '';
+  if (search === location.search) return;
+  try { history.replaceState(history.state, '', `${location.pathname}${search}${location.hash}`); } catch {}
+}
+// The page's own address on the web, even when it is opened from a file.
+const shareUrl = () => /^https?:$/.test(location.protocol) ? location.href : `${SITE}${location.search}${location.hash}`;
+async function copyLink(btn) {
+  const url = shareUrl();
+  let ok = false;
+  try { await navigator.clipboard.writeText(url); ok = true; } catch {
+    const t = document.createElement('textarea');
+    t.value = url; t.setAttribute('readonly', ''); t.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+    btn.after(t); t.select();
+    try { ok = document.execCommand('copy'); } catch {}
+    t.remove(); btn.focus({ preventScroll: true });
+  }
+  const label = btn.querySelector('span');
+  label.textContent = ok ? 'Copied' : 'Copy failed';
+  btn.classList.toggle('is-done', ok);
+  $('#live').textContent = ok ? 'Link copied' : `Copy failed. The link is ${url}`;
+  setTimeout(() => { label.textContent = 'Copy link'; btn.classList.remove('is-done'); }, 1800);
+}
+
 /* ── Wiring ── */
-function renderAll() { renderHero(); renderToolbar(); renderTimeline(); renderGuestbook(); }
+function renderAll() { renderHero(); renderToolbar(); renderTimeline(); renderGuestbook(); renderChecks(); }
 function renderStatic() {
   const latest = STEPS[STEPS.length - 1];
   const capsule = STEPS.map(s => s.capsule).filter(safeUrl).pop();
@@ -1191,17 +1364,21 @@ function renderStatic() {
 document.addEventListener('click', e => {
   const t = e.target;
   if (t.closest('#dr-close') || t.closest('#scrim')) { closeDrawer(); return; }
+  const cp = t.closest('#dr-copy');
+  if (cp) { copyLink(cp); return; }
   const idEl = t.closest('[data-id]');
   if (idEl) { openDrawer(idEl.dataset.id, idEl); return; }
   const st = t.closest('[data-step]');
-  if (st) { S.step = +st.dataset.step; renderAll(); if (S.page === 'home') requestAnimationFrame(jumpToEnd); return; }
+  if (st) { S.step = +st.dataset.step; renderAll(); writeURL(); if (S.page === 'home') requestAnimationFrame(jumpToEnd); return; }
+  const sc = t.closest('[data-status]');
+  if (sc) { S.status = sc.dataset.status; renderChecks(); writeURL(); $(`[data-status="${S.status}"]`)?.focus(); return; }
   const jb = t.closest('[data-jump]');
   if (jb) { jumpTo(jb.dataset.jump); return; }
   const kc = t.closest('[data-kind]');
   if (kc) {
     const k = kc.dataset.kind;
     if (S.kinds.has(k) && S.kinds.size > 1) S.kinds.delete(k); else S.kinds.add(k);
-    renderToolbar(); renderTimeline(); return;
+    renderToolbar(); renderTimeline(); writeURL(); return;
   }
   const vb = t.closest('[data-view]');
   if (vb) {
@@ -1216,7 +1393,7 @@ document.addEventListener('click', e => {
     try { localStorage.setItem('llmh-order', S.order); } catch {}
     renderTimeline(); return;
   }
-  if (t.closest('[data-clear]')) { S.kinds = new Set(Object.keys(KINDS)); S.lab = 'all'; S.q = ''; $('#q').value = ''; renderToolbar(); renderTimeline(); return; }
+  if (t.closest('[data-clear]')) { S.kinds = new Set(Object.keys(KINDS)); S.lab = 'all'; S.q = ''; $('#q').value = ''; renderToolbar(); renderTimeline(); writeURL(); return; }
   const band = t.closest('.band');
   if (band) {
     if (S.view === 'strip') {
@@ -1228,8 +1405,8 @@ document.addEventListener('click', e => {
     }
   }
 });
-$('#lab').addEventListener('change', e => { S.lab = e.target.value; renderTimeline(); });
-$('#q').addEventListener('input', e => { S.q = e.target.value; renderTimeline(); });
+$('#lab').addEventListener('change', e => { S.lab = e.target.value; renderTimeline(); writeURL(); });
+$('#q').addEventListener('input', e => { S.q = e.target.value; renderTimeline(); writeURL(true); });
 $('#prev').addEventListener('click', () => { const s = $('#strip'); s.scrollBy({ left: -s.clientWidth * 0.8 }); });
 $('#next').addEventListener('click', () => { const s = $('#strip'); s.scrollBy({ left: s.clientWidth * 0.8 }); });
 document.addEventListener('keydown', e => {
@@ -1263,19 +1440,20 @@ addEventListener('pointerup', () => { if (drag && drag.moved) { swallow = true; 
 strip.addEventListener('click', e => { if (swallow) { e.stopPropagation(); e.preventDefault(); } }, true);
 addEventListener('resize', () => { syncBands(); updateArrows(); syncJump(); });
 
-// Pages: #timeline (home), #guestbook or #entry-N, #about, and #fact/<id> on top of the current page.
-const TITLES = { home: 'LLM History · the timeline kept by AI models', guestbook: 'Guestbook · LLM History', about: 'About · LLM History' };
+// Pages: #timeline (home), #checks, #guestbook or #entry-N, #about, and #fact/<id> on top of the current page.
+const TITLES = { home: 'LLM History · the timeline kept by AI models', checks: 'Checks · LLM History', guestbook: 'Guestbook · LLM History', about: 'About · LLM History' };
 const setTitle = () => { document.title = TITLES[S.page]; };
 function route() {
   const h = location.hash;
   const fact = h.match(/^#fact\/([a-z0-9-]+)$/)?.[1];
-  const page = h === '#guestbook' || /^#entry-\d+$/.test(h) ? 'guestbook' : h === '#about' ? 'about' : fact && S.page !== 'home' ? S.page : 'home';
+  const page = h === '#guestbook' || /^#entry-\d+$/.test(h) ? 'guestbook' : h === '#about' ? 'about' : h === '#checks' ? 'checks' : fact && S.page !== 'home' ? S.page : 'home';
   const changed = page !== S.page;
   S.page = page;
-  $('#view-home').hidden = page !== 'home'; $('#view-guestbook').hidden = page !== 'guestbook'; $('#view-about').hidden = page !== 'about';
+  for (const p of Object.keys(TITLES)) $(`#view-${p}`).hidden = page !== p;
   document.querySelectorAll('[data-nav]').forEach(a => { if (a.dataset.nav === page) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
   setTitle();
-  if (fact) { if (S.open !== fact) { if (byId[fact]) openDrawer(fact); else history.replaceState(null, '', pageHash()); } }
+  // A fact added after the version shown has no panel: back to the page.
+  if (fact) { if (S.open !== fact) { if (byId[fact] && byId[fact].step <= S.step) openDrawer(fact); else history.replaceState(null, '', pageHash()); } }
   else closeDrawer(true);
   if (/^#entry-\d+$/.test(h)) requestAnimationFrame(() => document.getElementById(h.slice(1))?.scrollIntoView({ block: 'start' }));
   else if (changed && !fact) scrollTo({ top: 0 });
@@ -1283,9 +1461,12 @@ function route() {
 }
 addEventListener('hashchange', route);
 
+readURL();
 renderStatic();
 renderAll();
 route();
+writeURL(); // drops what the version does not have, such as an unknown lab
+
 // Open the strip on the newest facts, where readers start.
 function jumpToEnd() { strip.style.scrollBehavior = 'auto'; strip.scrollLeft = strip.scrollWidth; strip.style.scrollBehavior = ''; syncBands(); updateArrows(); syncJump(); }
 requestAnimationFrame(jumpToEnd);

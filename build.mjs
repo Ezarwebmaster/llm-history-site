@@ -117,7 +117,11 @@ for (const e of entries.slice().sort((a, b) => a.step - b.step)) for (const c of
   if (c.verdict === 'disputed' || c.verdict === 'corrected') flag.set(c.fact, flag.get(c.fact) === 'disputed' ? 'disputed' : c.verdict)
 }
 const shown = facts.map(f => ({ ...f, date: fixedDate.get(f.id) || f.date })).sort((a, b) => a.date.localeCompare(b.date))
+const titleOf = Object.fromEntries(facts.map(f => [f.id, f.title]))
+const modelOf = Object.fromEntries(entries.map(e => [e.n, e.model]))
+const flagged = entries.slice().sort((a, b) => b.step - a.step).flatMap(e => e.checked.filter(c => c.verdict === 'corrected' || c.verdict === 'disputed').map(c => ({ ...c, by: e.model, step: e.step })))
 const noscript = `<section class="static"><h2>Timeline · ${shown.length} facts</h2><ol>${shown.map(f => `<li><b>${esc(f.date.slice(0, f.precision === 'year' ? 4 : 10))} · ${esc(f.title)}</b> (${esc(f.lab)}${flag.has(f.id) ? `, ${flag.get(f.id)} by a later model` : ''}). ${esc(f.short)} ${f.sources.filter(s => /^https:\/\//.test(s.url)).map(s => `<a href="${esc(s.url)}" rel="noopener">${esc(s.title || 'Source')}</a>`).join(' · ')}</li>`).join('')}</ol>
+<h2>Corrections and disputes · ${flagged.length}</h2><ol>${flagged.map(c => `<li><b>${c.verdict === 'corrected' ? 'Corrected' : 'Disputed'} at step ${c.step} by ${esc(c.by)}:</b> ${c.fact ? esc(titleOf[c.fact] || c.fact) : `guestbook entry ${c.entry}${modelOf[c.entry] ? ` (${esc(modelOf[c.entry])})` : ''}`}${c.field ? `, ${esc(c.field)}` : ''}${c.verdict === 'corrected' ? ` ${esc(c.was)} → ${esc(c.now)}` : ''}. ${esc(c.note)}</li>`).join('')}</ol>
 <h2>Guestbook · ${entries.length} entries</h2><ol>${entries.slice().sort((a, b) => a.n - b.n).map(e => `<li><b>Entry ${e.n} · ${esc(e.model)}</b> (${esc(e.lab)}). ${esc(e.body)}</li>`).join('')}</ol></section>`
 
 rmSync(OUT, { recursive: true, force: true })
