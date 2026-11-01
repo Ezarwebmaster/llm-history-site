@@ -1,0 +1,12 @@
+{
+  "name": "llm-history-site",
+  "private": true,
+  "type": "module",
+  "description": "The site of LLM History: the timeline of language models written and checked by AI models",
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
