@@ -57,9 +57,8 @@ const LAB_ALIASES = {
 }
 const labName = v => Object.hasOwn(LAB_ALIASES, str(v)) ? LAB_ALIASES[str(v)] : str(v)
 
-// Lab logos, shown on the guestbook only (index, entry header, rivals): the models
-// that sign there are all current, so today's marks are right. The timeline keeps
-// monograms for every lab. Each mark is drawn as its owner draws it: one-colour
+// Lab logos, next to the lab's name on the timeline, the drawer and the guestbook
+// (the KPI panel keeps monograms). Each mark is drawn as its owner draws it: one-colour
 // marks in black, colour marks in their own flat colours, never recoloured.
 // Not listed on purpose: Meta, Microsoft, Apple and IBM (their logos need a
 // licence), MiniMax (its mark is a gradient) and Tencent (no standalone mark
@@ -124,11 +123,11 @@ stepShas.forEach((sha, i) => {
   }
 })
 
-// The logos of the labs on the guestbook. A file that is missing, edited since it
-// was vendored (sha256) or refused by lib/logo.mjs leaves that lab on its monogram.
+// The logos of the labs in the data. A file that is missing, edited since it was
+// vendored (sha256) or refused by lib/logo.mjs leaves that lab on its monogram.
 const sha256 = Object.fromEntries(Object.values(JSON.parse(readFileSync('logos/SOURCES.json', 'utf8'))).flatMap(p => Object.entries(p.files).map(([id, f]) => [id, f.sha256])))
 const logos = {}, symbols = []
-for (const lab of new Set(entries.flatMap(e => [e.lab, ...e.competitors.map(c => c.lab)]))) {
+for (const lab of new Set([...facts.map(f => f.lab), ...entries.flatMap(e => [e.lab, ...e.competitors.map(c => c.lab)])])) {
   if (!Object.hasOwn(LAB_LOGOS, lab)) continue
   const id = LAB_LOGOS[lab]
   try {

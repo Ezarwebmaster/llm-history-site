@@ -147,7 +147,7 @@ h1, h2, h3 { text-wrap: balance; }
 .mono { width: 22px; height: 22px; border-radius: 999px; display: inline-grid; place-items: center; flex: none; background: var(--surface-2); border: 1px solid var(--line); color: var(--text-2); font: 800 8.5px/1 var(--font-display); letter-spacing: -0.02em; }
 .mono-lg { width: 44px; height: 44px; font-size: 14px; border-radius: 14px; }
 .kpis .mono { background: #FFFFFF; color: #10201F; border: 0; }
-/* Guestbook chips: one light chip in both themes, so a logo keeps its own colours and a monogram sits beside it as an equal. */
+/* Lab chips next to a lab's name: one light chip in both themes, so a logo keeps its own colours and a monogram sits beside it as an equal. */
 .mono.mark { background: var(--logo-chip); border-color: var(--logo-chip-line); color: #10201F; }
 .mono .logo { width: 14px; height: 14px; color: #000000; fill: currentColor; }
 .mono-lg .logo { width: 26px; height: 26px; }
@@ -776,8 +776,8 @@ a.kpi:hover .kpi-l { color: var(--on-ink); }
       </section>
       <section class="about-sec">
         <h2>Names and logos</h2>
-        <p>Lab names and logos belong to their owners. Logos appear on the guestbook only, next to the lab's name, to show who made the model that signed an entry and the rivals it compares itself with. No lab sponsors, reviews or endorses this site. Each logo is drawn as its owner draws it, never recoloured.</p>
-        <p>Some labs appear as initials, as every lab does on the timeline: Meta, Microsoft, Apple and IBM allow their logo only under a licence, and MiniMax's logo is a gradient this site does not draw. <span id="about-marks"></span></p>
+        <p>Lab names and logos belong to their owners. A logo sits next to the lab's name only to show who made a model or published a work, and it is today's logo, even on an old fact. No lab sponsors, reviews or endorses this site. Each logo is drawn as its owner draws it, never recoloured.</p>
+        <p>Universities, public bodies and some companies appear as initials: Meta, Microsoft, Apple and IBM allow their logo only under a licence, and MiniMax's logo is a gradient this site does not draw. <span id="about-marks"></span></p>
       </section>
     </article>
   </div>
@@ -858,7 +858,7 @@ const fmtTime = iso => { const d = new Date(iso); return isNaN(d) ? '' : `${Stri
 const monthOf = f => +f.date.slice(5, 7) - 1;
 const ic = (id, cls = 'ic') => `<svg class="${cls}" aria-hidden="true"><use href="#i-${id}"/></svg>`;
 const mono = (lab, cls = '') => `<span class="mono ${cls}" aria-hidden="true">${esc(monoOf(lab || '?'))}</span>`;
-// On the guestbook only: the lab's logo when build.mjs has one for it (LAB_LOGOS), else its monogram.
+// Next to a lab's name: its logo when build.mjs has one for it (LAB_LOGOS), else its monogram.
 const LOGOS = new Map(Object.entries(DATA.logos || {}));
 const mark = (lab, cls = '') => `<span class="mono mark ${cls}" aria-hidden="true">${LOGOS.has(lab) ? `<svg class="logo"><use href="#lg-${esc(LOGOS.get(lab))}"/></svg>` : esc(monoOf(lab || '?'))}</span>`;
 const kindTag = k => `<span class="kind"><i class="kd kd-${KINDS[k] ? k : 'policy'}"></i>${esc(KINDS[k] || k)}</span>`;
@@ -984,7 +984,7 @@ function cardHTML(f) {
     <span class="fact-top"><span class="date">${fmtDate(f.date, f.precision)}</span>${kindTag(f.kind)}</span>
     <span class="fact-title">${esc(f.title)}</span>
     <span class="fact-short">${esc(f.short)}</span>
-    <span class="fact-foot"><span class="lab">${mono(f.lab)}<span>${esc(f.lab)}</span></span>${statusBadge(f.status)}</span>
+    <span class="fact-foot"><span class="lab">${mark(f.lab)}<span>${esc(f.lab)}</span></span>${statusBadge(f.status)}</span>
     <span class="fact-by">${byLine(f)}${isNew ? '<b class="new-tag">New</b>' : ''}</span>
   </button>`;
 }
@@ -992,7 +992,7 @@ function rowHTML(f) {
   const isNew = isNewAt(f);
   return `<button type="button" class="row${isNew ? ' is-new' : ''}" data-id="${esc(f.id)}" aria-label="${cardLabel(f)}"><span class="date">${fmtDate(f.date, f.precision)}</span>
     <span class="row-main"><span class="row-title">${esc(f.title)}${isNew ? '<b class="new-tag">New</b>' : ''}</span><span class="row-sub">${esc(f.short)}</span>
-    <span class="row-meta">${kindTag(f.kind)}<span class="lab">${mono(f.lab)}<span>${esc(f.lab)}</span></span><span>${byLine(f)}</span></span></span>
+    <span class="row-meta">${kindTag(f.kind)}<span class="lab">${mark(f.lab)}<span>${esc(f.lab)}</span></span><span>${byLine(f)}</span></span></span>
     ${statusBadge(f.status)}</button>`;
 }
 const emptyHTML = () => `<div class="empty"><b>No facts match these filters.</b>Try another lab, type or search.<br><button type="button" class="btn" data-clear>Clear filters</button></div>`;
@@ -1286,7 +1286,7 @@ function openDrawer(id, opener) {
   d.innerHTML = `<div class="dr-top"><span class="label">Fact</span><span class="dr-file">${esc(f.file)}</span><button type="button" class="dr-copy" id="dr-copy">${ic('link')}<span>Copy link</span></button><button type="button" class="icon-btn" id="dr-close" aria-label="Close">${ic('x')}</button></div>
     <div class="dr-meta">${kindTag(f.kind)}<span class="date">${fmtDate(f.date, f.precision)}</span>${statusBadge(f.status)}</div>
     <h2 class="dr-title" id="dr-title">${esc(f.title)}</h2>
-    <p class="dr-lab">${mono(f.lab)}${esc(f.lab)}</p>
+    <p class="dr-lab">${mark(f.lab)}${esc(f.lab)}</p>
     ${banners}${self}${note}
     <section class="dr-sec"><h3 class="label">What happened</h3><div class="serif">${md(f.happened)}</div></section>
     <section class="dr-sec"><h3 class="label">Why it matters</h3><div class="serif">${md(f.matters)}</div></section>
