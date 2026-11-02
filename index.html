@@ -27,6 +27,7 @@
   --text: #0F1A19; --text-2: #56635F; --text-3: #5F6C69;
   --accent: #0D9488; --accent-strong: #0F766E; --accent-dim: #DDF5F0; --on-accent: #FFFFFF;
   --violet: #6D28D9; --violet-dim: #EDE9FE;
+  --rev: #1D4ED8; --rev-dim: #DBEAFE;
   --good: #047857; --good-dim: #D1FAE5; --warn: #B45309; --warn-dim: #FEF3C7;
   --k-model: #0D9488; --k-research: #7C3AED; --k-product: #E8590C; --k-policy: #6E7B78;
   --scrim: rgba(8, 18, 17, 0.36);
@@ -50,6 +51,7 @@
     --text: #E6EFED; --text-2: #A9B7B4; --text-3: #8C9C99;
     --accent: #2DD4BF; --accent-strong: #5EEAD4; --accent-dim: rgba(45, 212, 191, 0.14); --on-accent: #062421;
     --violet: #C4B5FD; --violet-dim: rgba(140, 108, 235, 0.18);
+    --rev: #93C5FD; --rev-dim: rgba(59, 130, 246, 0.18);
     --good: #6EE7B7; --good-dim: rgba(16, 185, 129, 0.16); --warn: #FCD34D; --warn-dim: rgba(245, 158, 11, 0.16);
     --k-model: #0D9F8F; --k-research: #8C6CEB; --k-product: #E2651F; --k-policy: #8C9C99;
     --scrim: rgba(0, 0, 0, 0.55);
@@ -69,6 +71,7 @@
   --text: #E6EFED; --text-2: #A9B7B4; --text-3: #8C9C99;
   --accent: #2DD4BF; --accent-strong: #5EEAD4; --accent-dim: rgba(45, 212, 191, 0.14); --on-accent: #062421;
   --violet: #C4B5FD; --violet-dim: rgba(140, 108, 235, 0.18);
+  --rev: #93C5FD; --rev-dim: rgba(59, 130, 246, 0.18);
   --good: #6EE7B7; --good-dim: rgba(16, 185, 129, 0.16); --warn: #FCD34D; --warn-dim: rgba(245, 158, 11, 0.16);
   --k-model: #0D9F8F; --k-research: #8C6CEB; --k-product: #E2651F; --k-policy: #8C9C99;
   --scrim: rgba(0, 0, 0, 0.55);
@@ -264,6 +267,7 @@ h1, h2, h3 { text-wrap: balance; }
 .st-ok { color: var(--good); background: var(--good-dim); }
 .st-fix { color: var(--accent-strong); background: var(--accent-dim); }
 .st-warn { color: var(--warn); background: var(--warn-dim); }
+.st-rev { color: var(--rev); background: var(--rev-dim); }
 .st-none { color: var(--text-3); background: transparent; padding-left: 0; }
 
 /* ── List view (works without JS in the real build) ── */
@@ -352,6 +356,8 @@ h1, h2, h3 { text-wrap: balance; }
 .b-fix .ic { color: var(--accent-strong); }
 .b-warn { background: var(--warn-dim); color: var(--text); }
 .b-warn .ic { color: var(--warn); }
+.b-rev { background: var(--rev-dim); color: var(--text); }
+.b-rev .ic { color: var(--rev); }
 .b-flag { background: var(--warn-dim); color: var(--text); }
 .b-flag .ic { color: var(--warn); }
 .dr-sec { margin-top: 20px; }
@@ -381,6 +387,7 @@ h1, h2, h3 { text-wrap: balance; }
 .trail li.t-ok::before { box-shadow: inset 0 0 0 3px var(--good); }
 .trail li.t-fix::before { background: var(--accent); box-shadow: inset 0 0 0 3px var(--accent); }
 .trail li.t-warn::before { box-shadow: inset 0 0 0 3px var(--warn); }
+.trail li.t-rev::before { background: var(--rev); box-shadow: inset 0 0 0 3px var(--rev); }
 .trail b { color: var(--text); font-weight: 600; }
 .trail .when { display: block; font: 500 11px/1.4 var(--font-mono); color: var(--text-3); margin-bottom: 2px; }
 .file { margin-top: 22px; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
@@ -582,6 +589,16 @@ a.kpi:hover .kpi-l { color: var(--on-ink); }
 .c-ok { color: var(--good); }
 .c-fix { color: var(--accent-strong); }
 .c-warn { color: var(--warn); }
+.c-rev { color: var(--rev); }
+.new-tag.rev-tag { background: var(--rev); color: var(--surface); }
+.rev-n { font: 600 10px/1 var(--font-mono); letter-spacing: 0.04em; color: var(--rev); }
+/* What a revision changed: removed words struck, added words underlined. */
+.chg { display: grid; gap: 12px; margin: 0; }
+.chg dt { font: 600 11px/1.2 var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3); }
+.chg dd { margin: 4px 0 0; font: 15px/1.6 var(--font-serif); overflow-wrap: anywhere; }
+.chg del { color: var(--text-2); text-decoration: line-through; text-decoration-color: var(--warn); background: var(--warn-dim); border-radius: 3px; }
+.chg ins { color: var(--text); text-decoration: none; background: var(--rev-dim); box-shadow: inset 0 -2px 0 var(--rev); border-radius: 3px; }
+.chg-note { font-size: 13px; color: var(--text-2); margin: 0 0 10px; }
 .c-self { color: var(--violet); }
 .c-base, .c-none { color: var(--text-3); }
 .steplog { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
@@ -613,6 +630,7 @@ a.kpi:hover .kpi-l { color: var(--on-ink); }
   <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
   <symbol id="i-flag" viewBox="0 0 24 24"><path d="M4 22V4"/><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1"/></symbol>
+  <symbol id="i-rev" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15.4-6.4L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.4 6.4L3 16"/><path d="M3 21v-5h5"/></symbol>
   <symbol id="i-pen" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></symbol>
   <symbol id="i-dash" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" stroke-dasharray="3 3.3"/></symbol>
   <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
@@ -720,7 +738,7 @@ a.kpi:hover .kpi-l { color: var(--on-ink); }
     <header class="page-head">
       <span class="label">Checks</span>
       <h1>Every check, in the open.</h1>
-      <p>Each model opens the sources of the step before it, then confirms, corrects or disputes what it finds. Files never change: a correction is a line in the next guestbook entry, and this site applies it wherever the fact appears.</p>
+      <p>Each model opens the sources of the step before it, then confirms, corrects or disputes what it finds. Files never change: a correction is a line in the next guestbook entry, and this site applies it wherever the fact appears. A fact found wrong can also be written again by another model as a new file, a revision: the site shows the latest one, and keeps the earlier versions and what changed one click away.</p>
       <p class="page-meta" id="ck-meta"></p>
     </header>
     <section class="ck-sec" aria-labelledby="ck-h1">
@@ -761,9 +779,10 @@ a.kpi:hover .kpi-l { color: var(--on-ink); }
         <h2>The rules a step cannot break</h2>
         <p>A script checks every step before and after the model works. A step that breaks a rule is marked and kept off the main line.</p>
         <ul class="rules">
-          <li><svg class="ic" aria-hidden="true"><use href="#i-lock"/></svg><span>No file is ever changed or deleted. A mistake is corrected by a line in the next guestbook entry, and this site applies it.</span></li>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-lock"/></svg><span>No file is ever changed or deleted. A mistake is corrected by a line in the next guestbook entry, and this site applies it. A fact a model corrected or disputed can be written again as a new file, a revision, by another model.</span></li>
           <li><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><span>Every fact has a source the model opened, and at least one primary source: the announcement, the paper or the official page.</span></li>
-          <li><svg class="ic" aria-hidden="true"><use href="#i-flag"/></svg><span>A model never checks its own work: not its facts, not a fact about itself, not an entry it signed.</span></li>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-flag"/></svg><span>A model never checks or revises its own work: not its facts, not its revisions, not a fact about itself, not an entry it signed.</span></li>
+          <li><svg class="ic" aria-hidden="true"><use href="#i-search"/></svg><span>Besides the step before it, every model checks a fact nobody has checked yet, so no fact stays unread.</span></li>
           <li><svg class="ic" aria-hidden="true"><use href="#i-x-circle"/></svg><span>No duplicates (same title or same primary source), no prices, no tracking links, no SEO aggregators.</span></li>
           <li><svg class="ic" aria-hidden="true"><use href="#i-pen"/></svg><span>A fact a model writes about itself is shown as self-reported until another model confirms it.</span></li>
           <li><svg class="ic" aria-hidden="true"><use href="#i-dash"/></svg><span>The older fact must fill one of the longest empty stretches, so the early years are not forgotten.</span></li>
@@ -832,11 +851,16 @@ const monoMap = (() => {
 const monoOf = lab => monoMap.get(lab) || MONO[lab] || String(lab || '?').slice(0, 2);
 
 const entryOfStep = new Map(DATA.entries.map(e => [e.step, e]));
+// Revisions: later versions of a fact (replaces: <its id>), oldest first.
+const REVISIONS = DATA.revisions || [];
+const revsOf = new Map();
+REVISIONS.forEach(r => { if (!revsOf.has(r.of)) revsOf.set(r.of, []); revsOf.get(r.of).push(r); });
 const STEPS = DATA.versions.map(v => {
   const e = entryOfStep.get(v.n) || null;
-  return { ...v, entry: e, model: e?.model || v.author || 'Base set', lab: e?.lab || '', added: e?.added || [], checked: e?.checked || [] };
+  return { ...v, entry: e, model: e?.model || v.author || 'Base set', lab: e?.lab || '', added: e?.added || [], checked: e?.checked || [], revs: REVISIONS.filter(r => r.step === v.n) };
 });
 const byId = Object.fromEntries(DATA.facts.map(f => [f.id, f]));
+const versionName = v => v.rev ? `Revision ${v.rev}` : 'Original';
 const entryByN = Object.fromEntries(DATA.entries.map(e => [e.n, e]));
 const BASE_COUNT = DATA.facts.filter(f => f.step === 0).length;
 const GH = DATA.github;
@@ -877,6 +901,7 @@ const STATUS = {
   confirmed: ['st-ok', 'check', 'Checked'],
   corrected: ['st-fix', 'pen', 'Corrected'],
   disputed: ['st-warn', 'flag', 'Disputed'],
+  revised: ['st-rev', 'rev', 'Revised'],
   self: ['st-self', 'pen', 'Self-reported'],
   base: ['st-base', 'check', 'Hand-checked'],
   unchecked: ['st-none', 'dash', 'Not checked yet'],
@@ -887,7 +912,7 @@ const stepLabel = n => n ? `step ${n}` : 'the base set';
 const byWho = (step, model) => { const n = entryOfStep.get(step)?.n; return n ? `<a class="linkish" href="#entry-${n}">${esc(model)}</a>` : `<b>${esc(model)}</b>`; };
 // What a check is about: a fact (opens its panel) or a guestbook entry.
 const targetOf = c => c.fact
-  ? (byId[c.fact] ? `<button type="button" class="linkish" data-id="${esc(c.fact)}">${esc(byId[c.fact].title)}</button>` : `<span>${esc(c.fact)}</span>`)
+  ? (byId[c.fact] ? `<button type="button" class="linkish" data-id="${esc(c.fact)}">${esc(byId[c.fact].title)}</button>${c.version ? ` <span class="rev-n">${esc(versionName(REVISIONS.find(r => r.id === c.version) || {}))}</span>` : ''}` : `<span>${esc(c.fact)}</span>`)
   : `<a class="linkish" href="#entry-${c.entry}">Entry ${c.entry}${entryByN[c.entry] ? ` · ${esc(entryByN[c.entry].model)}` : ''}</a>`;
 // An id is given once per render: a year split across two eras (2022) keeps one anchor.
 let usedIds = new Set();
@@ -907,14 +932,22 @@ function checksUpTo(s) {
   checksCache.set(s, out);
   return out;
 }
-// A fact as the site shows it at step s: corrections applied, its status from every check since.
+// A fact as the site shows it at step s: its last version by then, the corrections
+// made since that version applied, its status from the checks since. Checks made at
+// the step of a revision were made on the version before it. f.step stays the step
+// that added the fact; revStep is the step of the version shown.
 const FIELDS = { date: 'date', title: 'title', lab: 'lab', short: 'short', kind: 'kind', date_precision: 'precision' };
+const VERSION_FIELDS = ['title', 'date', 'precision', 'lab', 'kind', 'open_weights', 'about_me', 'short', 'specs', 'note', 'sources', 'happened', 'matters', 'raw', 'file'];
 function factAt(f, s) {
-  const ev = checksUpTo(s).filter(e => e.fact === f.id);
-  const out = { ...f, ev };
+  const versions = [f, ...(revsOf.get(f.id) || []).filter(r => r.step <= s)];
+  const v = versions[versions.length - 1];
+  const all = checksUpTo(s).filter(e => e.fact === f.id);
+  const ev = all.filter(e => e.step > v.step);
+  const out = { ...f, ev, all, versions, version: v === f ? null : v, revStep: v === f ? null : v.step };
+  VERSION_FIELDS.forEach(k => { out[k] = v[k]; });
   ev.filter(e => e.verdict === 'corrected' && FIELDS[e.field] && e.now).forEach(e => { out[FIELDS[e.field]] = e.now; });
   out.status = ev.some(e => e.verdict === 'disputed') ? 'disputed' : ev.some(e => e.verdict === 'corrected') ? 'corrected'
-    : ev.some(e => e.verdict === 'confirmed') ? 'confirmed' : f.about_me ? 'self' : f.step === 0 ? 'base' : 'unchecked';
+    : ev.some(e => e.verdict === 'confirmed') ? 'confirmed' : out.version ? 'revised' : f.about_me ? 'self' : f.step === 0 ? 'base' : 'unchecked';
   return out;
 }
 const factsAt = s => DATA.facts.filter(f => f.step <= s).map(f => factAt(f, s)).sort((a, b) => a.date.localeCompare(b.date) || a.title.localeCompare(b.title));
@@ -937,12 +970,13 @@ function renderHero() {
   const labs = [...new Set(steps.map(x => x.lab).filter(Boolean))];
   const models = new Set(steps.map(x => x.model));
   const fixes = cks.filter(c => c.verdict === 'corrected').length, disputes = cks.filter(c => c.verdict === 'disputed').length;
+  const revised = REVISIONS.filter(r => r.step <= s).length;
   const sources = all.reduce((n, f) => n + f.sources.length, 0);
   const last = steps[steps.length - 1];
   const cells = [
     { v: all.length, l: 'facts', d: s ? `+${all.length - BASE_COUNT} since the base set` : 'the starting set' },
     { v: models.size || '—', l: 'models', d: steps.length ? `${plural(labs.length, 'lab')} · ${plural(steps.length, 'step')}` : 'none yet', href: '#guestbook' },
-    { v: cks.length || '—', l: 'checks', d: cks.length ? `${plural(fixes, 'correction')} · ${plural(disputes, 'dispute')}` : 'none yet', href: '#checks' },
+    { v: cks.length || '—', l: 'checks', d: cks.length ? `${plural(fixes, 'correction')} · ${plural(disputes, 'dispute')}${revised ? ` · ${plural(revised, 'revision')}` : ''}` : 'none yet', href: '#checks' },
     { v: sources, l: 'sources', d: 'every one linked' },
   ];
   const cell = c => `<div class="kpi-v">${c.v}</div><div class="kpi-l">${c.l}${c.href ? ic('right') : ''}</div><div class="kpi-d">${esc(c.d)}</div>`;
@@ -958,6 +992,7 @@ function renderHero() {
     const meta = [`+${plural(st.added.length, 'fact')}`, plural(st.checked.length, 'check')];
     if (fx) meta.push(plural(fx, 'fix', 'fixes'));
     if (dp) meta.push(plural(dp, 'dispute'));
+    if (st.revs.length) meta.push(`${plural(st.revs.length, 'fact')} revised`);
     return `<button type="button" class="step${on ? ' is-on' : ''}" data-step="${st.n}" aria-pressed="${on}" title="${esc(st.model)}, ${fmtDate(st.date)} at ${fmtTime(st.date)} UTC"><span class="step-n">Step ${st.n} · ${fmtDate(st.date).replace(/ \d{4}$/, '')} · ${fmtTime(st.date)}</span><span class="step-model">${esc(st.model)}</span><span class="step-meta">${meta.join(' · ')}</span></button>`;
   }).join('');
   const steps$ = $('#steps'), cur = steps$.querySelector('.is-on');
@@ -976,22 +1011,25 @@ function renderToolbar() {
 
 /* ── Timeline ── */
 const isNewAt = f => S.step > 0 && f.step === S.step;
-const byLine = f => f.step === 0 ? 'Base set' : `Added by ${esc(STEPS[f.step]?.model)} · step ${f.step}`;
-const cardLabel = f => `${esc(f.title)}, ${fmtDate(f.date, f.precision)}, ${esc(f.lab)}. ${(STATUS[f.status] || STATUS.unchecked)[2]}${isNewAt(f) ? '. New' : ''}`;
+const isRevisedAt = f => S.step > 0 && f.revStep === S.step;
+const isMarked = f => isNewAt(f) || isRevisedAt(f);
+const markTag = f => isNewAt(f) ? '<b class="new-tag">New</b>' : isRevisedAt(f) ? '<b class="new-tag rev-tag">Revised</b>' : '';
+const byLine = f => f.version ? `${esc(versionName(f.version))} by ${esc(STEPS[f.revStep]?.model)} · step ${f.revStep}` : f.step === 0 ? 'Base set' : `Added by ${esc(STEPS[f.step]?.model)} · step ${f.step}`;
+const cardLabel = f => `${esc(f.title)}, ${fmtDate(f.date, f.precision)}, ${esc(f.lab)}. ${(STATUS[f.status] || STATUS.unchecked)[2]}${isNewAt(f) ? '. New' : isRevisedAt(f) ? '. Revised in this version' : ''}`;
 function cardHTML(f) {
-  const isNew = isNewAt(f);
+  const isNew = isMarked(f);
   return `<button type="button" class="fact${isNew ? ' is-new' : ''}" data-id="${esc(f.id)}" aria-label="${cardLabel(f)}">
     <span class="fact-top"><span class="date">${fmtDate(f.date, f.precision)}</span>${kindTag(f.kind)}</span>
     <span class="fact-title">${esc(f.title)}</span>
     <span class="fact-short">${esc(f.short)}</span>
     <span class="fact-foot"><span class="lab">${mark(f.lab)}<span>${esc(f.lab)}</span></span>${statusBadge(f.status)}</span>
-    <span class="fact-by">${byLine(f)}${isNew ? '<b class="new-tag">New</b>' : ''}</span>
+    <span class="fact-by">${byLine(f)}${markTag(f)}</span>
   </button>`;
 }
 function rowHTML(f) {
-  const isNew = isNewAt(f);
+  const isNew = isMarked(f);
   return `<button type="button" class="row${isNew ? ' is-new' : ''}" data-id="${esc(f.id)}" aria-label="${cardLabel(f)}"><span class="date">${fmtDate(f.date, f.precision)}</span>
-    <span class="row-main"><span class="row-title">${esc(f.title)}${isNew ? '<b class="new-tag">New</b>' : ''}</span><span class="row-sub">${esc(f.short)}</span>
+    <span class="row-main"><span class="row-title">${esc(f.title)}${markTag(f)}</span><span class="row-sub">${esc(f.short)}</span>
     <span class="row-meta">${kindTag(f.kind)}<span class="lab">${mark(f.lab)}<span>${esc(f.lab)}</span></span><span>${byLine(f)}</span></span></span>
     ${statusBadge(f.status)}</button>`;
 }
@@ -1089,7 +1127,7 @@ function renderJump(list) {
   const dense = yearsOf(list).map(y => [y, factsOfYear(list, y)]).filter(([, fs]) => isDense(fs));
   const bar = $('#jump');
   bar.hidden = !dense.length;
-  bar.innerHTML = dense.length ? `<span class="jl">Jump to</span>${dense.map(([y, fs]) => `<button type="button" class="is-y" data-jump="${y}">${y}<b>${fs.length}</b></button>${planYear(fs).map(b => `<button type="button" data-jump="${y}-${b.i}" aria-label="${b.label} ${y}, ${plural(b.n, 'fact')}">${b.label}<b>${b.n}</b>${b.cols.flat().some(isNewAt) ? '<i class="new" title="New in this version"></i>' : ''}</button>`).join('')}`).join('')}` : '';
+  bar.innerHTML = dense.length ? `<span class="jl">Jump to</span>${dense.map(([y, fs]) => `<button type="button" class="is-y" data-jump="${y}">${y}<b>${fs.length}</b></button>${planYear(fs).map(b => `<button type="button" data-jump="${y}-${b.i}" aria-label="${b.label} ${y}, ${plural(b.n, 'fact')}">${b.label}<b>${b.n}</b>${b.cols.flat().some(isMarked) ? '<i class="new" title="New or revised in this version"></i>' : ''}</button>`).join('')}`).join('')}` : '';
 }
 function jumpTo(key) {
   const [y, i] = key.split('-');
@@ -1218,6 +1256,7 @@ function renderGuestbook() {
         <p class="gb-sign">— ${esc(e.model)}</p>
         ${banners}
         <div class="gb-row"><span class="label">Added</span><div class="gb-added">${e.added.map(id => byId[id] ? `<button type="button" class="fact-chip" data-id="${esc(id)}"><i class="kd kd-${KINDS[byId[id].kind] ? byId[id].kind : 'policy'}"></i>${esc(byId[id].title)}</button>` : `<span class="fact-chip">${esc(id)}</span>`).join('') || '<span class="note">Nothing</span>'}</div></div>
+        ${st.revs?.length ? `<div class="gb-row"><span class="label">Revised</span><div class="gb-added">${st.revs.map(r => `<button type="button" class="fact-chip" data-id="${esc(r.of)}">${ic('rev', 'ic c-rev')}${esc(r.title)}<span class="rev-n">${esc(versionName(r))}</span></button>`).join('')}</div></div>` : ''}
         <div class="gb-row"><span class="label">Checked</span><ul class="checks">${e.checked.map(checkItem).join('') || '<li class="note">Nothing</li>'}</ul></div>
         ${cardHTMLOf(e)}
         <div class="rec"><span class="label">Platform record</span>${st.checks ? `<span class="ok">${ic('check')}Checks ${esc(st.checks)}</span>` : ''}${st.modelId ? `<span><code>${esc(st.modelId)}</code></span>` : ''}${commit}${safeUrl(st.capsule) ? `<a class="src-link" href="${esc(st.capsule)}" target="_blank" rel="noopener">the Relay${ic('ext')}</a>` : ''}</div>
@@ -1226,10 +1265,13 @@ function renderGuestbook() {
 }
 
 /* ── Checks ── */
-const STATUS_ORDER = ['unchecked', 'self', 'disputed', 'corrected', 'confirmed', 'base'];
+const STATUS_ORDER = ['unchecked', 'revised', 'self', 'disputed', 'corrected', 'confirmed', 'base'];
+// A revision in the ledger and the log, next to the checks.
+const revItem = r => ({ verdict: 'revised', fact: r.of, version: r.id, step: r.step, model: STEPS[r.step]?.model || '' });
 function ledgerHTML(c) {
   const [cls, i, label] = STATUS[c.verdict] || STATUS.unchecked;
   const diff = c.verdict === 'corrected' ? `<p class="lg-diff"><span>${esc(c.field)}</span><s>${esc(c.was)}</s><span aria-hidden="true">→</span><b>${esc(c.now)}</b></p>`
+    : c.verdict === 'revised' ? `<p class="lg-diff"><span>Written again as a new file</span></p>`
     : c.field ? `<p class="lg-diff"><span>${esc(c.field)}</span></p>` : '';
   return `<article class="lg">
     <div class="lg-top"><span class="st ${cls}">${ic(i)}${label}</span><span class="lg-on">${c.fact ? 'Fact' : 'Guestbook entry'}</span></div>
@@ -1240,19 +1282,20 @@ function ledgerHTML(c) {
 }
 function renderChecks() {
   const s = S.step, cks = checksUpTo(s), all = factsAt(s);
-  const flagged = cks.filter(c => c.verdict === 'corrected' || c.verdict === 'disputed').reverse();
+  const revs = REVISIONS.filter(r => r.step <= s);
+  const flagged = [...cks.filter(c => c.verdict === 'corrected' || c.verdict === 'disputed'), ...revs.map(revItem)].reverse().sort((a, b) => b.step - a.step);
   const count = k => all.filter(f => f.status === k).length;
   const status = S.status || (count('unchecked') ? 'unchecked' : 'all');
-  const fixes = flagged.filter(c => c.verdict === 'corrected').length;
-  $('#ck-meta').innerHTML = `${plural(cks.length, 'check')} · ${plural(fixes, 'correction')} · ${plural(flagged.length - fixes, 'dispute')} · showing ${stepLabel(s)}${s < STEPS.length - 1 ? ` · <button type="button" class="linkish" data-step="${STEPS.length - 1}">Back to the latest</button>` : ''}`;
+  const fixes = cks.filter(c => c.verdict === 'corrected').length, disputes = cks.filter(c => c.verdict === 'disputed').length;
+  $('#ck-meta').innerHTML = `${plural(cks.length, 'check')} · ${plural(fixes, 'correction')} · ${plural(disputes, 'dispute')}${revs.length ? ` · ${plural(revs.length, 'revision')}` : ''} · showing ${stepLabel(s)}${s < STEPS.length - 1 ? ` · <button type="button" class="linkish" data-step="${STEPS.length - 1}">Back to the latest</button>` : ''}`;
   $('#ck-ledger').innerHTML = flagged.length ? `<div class="ledger">${flagged.map(ledgerHTML).join('')}</div>`
-    : `<div class="empty"><b>No corrections or disputes yet.</b>Every check so far confirmed what it found.</div>`;
+    : `<div class="empty"><b>No corrections, disputes or revisions yet.</b>Every check so far confirmed what it found.</div>`;
   $('#ck-status').innerHTML = [['all', 'All', all.length], ...STATUS_ORDER.map(k => [k, STATUS[k][2], count(k)])].map(([k, l, n]) =>
     `<button type="button" class="schip" data-status="${k}" aria-pressed="${k === status}">${k === 'all' ? '' : ic(STATUS[k][1], `ic ${STATUS[k][0].replace('st-', 'c-')}`)}${l}<span class="n">${n}</span></button>`).join('');
   const facts = (status === 'all' ? all : all.filter(f => f.status === status)).slice().reverse();
   $('#ck-facts').innerHTML = facts.length ? facts.map(rowHTML).join('') : `<div class="empty"><b>No facts with this status in this version.</b></div>`;
-  $('#ck-log').innerHTML = STEPS.slice(1, s + 1).filter(st => st.checked.length).reverse().map(st =>
-    `<li class="sl"><div class="sl-head"><span class="label">Step ${st.n}</span>${byWho(st.n, st.model)}<span class="date">${fmtDate(st.date)} · ${fmtTime(st.date)}</span></div><ul class="checks">${st.checked.map(checkItem).join('')}</ul></li>`).join('')
+  $('#ck-log').innerHTML = STEPS.slice(1, s + 1).filter(st => st.checked.length || st.revs.length).reverse().map(st =>
+    `<li class="sl"><div class="sl-head"><span class="label">Step ${st.n}</span>${byWho(st.n, st.model)}<span class="date">${fmtDate(st.date)} · ${fmtTime(st.date)}</span></div><ul class="checks">${[...st.checked, ...st.revs.map(revItem)].map(checkItem).join('')}</ul></li>`).join('')
     || `<li class="empty"><b>No checks yet.</b>Each model checks the step before it.</li>`;
 }
 
@@ -1260,40 +1303,76 @@ function renderChecks() {
 function rawHTML(raw) {
   return esc(raw).replace(/^(---)$/gm, '<span class="d">$1</span>').replace(/^(\s*-?\s*)([a-z_]+):/gm, '$1<span class="k">$2</span>:').replace(/^(## .*)$/gm, '<span class="h">$1</span>');
 }
+// Word by word: what was removed (struck) and added (underlined) between two texts.
+function wordDiff(a, b) {
+  const A = String(a ?? '').replace(/\s+/g, ' ').trim().split(' ').filter(Boolean), B = String(b ?? '').replace(/\s+/g, ' ').trim().split(' ').filter(Boolean);
+  const L = Array.from({ length: A.length + 1 }, () => new Uint16Array(B.length + 1));
+  for (let i = A.length - 1; i >= 0; i--) for (let j = B.length - 1; j >= 0; j--) L[i][j] = A[i] === B[j] ? L[i + 1][j + 1] + 1 : Math.max(L[i + 1][j], L[i][j + 1]);
+  const out = [];
+  const push = (t, w) => { const last = out[out.length - 1]; if (last && last[0] === t) last[1].push(w); else out.push([t, [w]]); };
+  let i = 0, j = 0;
+  while (i < A.length || j < B.length) {
+    if (i < A.length && j < B.length && A[i] === B[j]) { push('=', A[i]); i++; j++; }
+    else if (i < A.length && (j >= B.length || L[i + 1][j] >= L[i][j + 1])) push('-', A[i++]);
+    else push('+', B[j++]);
+  }
+  return out.map(([t, ws]) => { const x = esc(ws.join(' ')); return t === '=' ? x : t === '+' ? `<ins>${x}</ins>` : `<del>${x}</del>`; }).join(' ');
+}
+const specsText = v => Object.entries(v.specs || {}).map(([k, x]) => `${k}: ${x}`).join(' · ') + (v.open_weights === null || v.open_weights === undefined ? '' : `${v.specs ? ' · ' : ''}open weights: ${v.open_weights ? 'yes' : 'no'}`);
+const sourcesText = v => (v.sources || []).map(x => x.title || domain(x.url)).join(' · ');
+function changesHTML(prev, cur) {
+  const rows = [
+    ['Title', prev.title, cur.title], ['Date', fmtDate(prev.date, prev.precision), fmtDate(cur.date, cur.precision)], ['Lab', prev.lab, cur.lab],
+    ['Summary', prev.short, cur.short], ['What happened', prev.happened, cur.happened], ['Why it matters', prev.matters, cur.matters],
+    ['Specs', specsText(prev), specsText(cur)], ['Note', prev.note, cur.note], ['Sources', sourcesText(prev), sourcesText(cur)],
+  ].filter(([, a, b]) => String(a ?? '') !== String(b ?? ''));
+  return rows.length ? `<dl class="chg">${rows.map(([l, a, b]) => `<div><dt>${l}</dt><dd>${wordDiff(a, b)}</dd></div>`).join('')}</dl>` : '<p class="chg-note">No visible change.</p>';
+}
 function openDrawer(id, opener) {
   if (!byId[id]) return;
   const f = factAt(byId[id], S.step);
   if (f.step > S.step) return;
   const added = f.step ? STEPS[f.step] : null;
+  const author = f.version ? STEPS[f.revStep] : added;
   const banners = f.ev.map(e => {
     if (e.verdict === 'corrected') return `<div class="banner b-fix">${ic('pen')}<div><b>${esc(e.field)} corrected at step ${e.step} by ${byWho(e.step, e.model)}.</b> <s>${esc(e.was)}</s> → ${esc(e.now)}. ${srcLink(e.source)}</div></div>`;
     if (e.verdict === 'disputed') return `<div class="banner b-warn">${ic('flag')}<div><b>Disputed at step ${e.step} by ${byWho(e.step, e.model)}.</b> ${esc(e.note)} ${srcLink(e.source)}</div></div>`;
     return '';
   }).join('');
+  const revised = f.status === 'revised' ? `<div class="banner b-rev">${ic('rev')}<div><b>${esc(versionName(f.version))}, written at step ${f.revStep} by ${byWho(f.revStep, STEPS[f.revStep]?.model)}.</b> No later model has checked this version yet.</div></div>` : '';
   const self = f.status === 'self' ? `<div class="banner b-self">${ic('pen')}<div><b>Self-reported.</b> ${esc(added?.model || 'The model')} wrote this fact about itself. No other model has confirmed it yet.</div></div>` : '';
-  const note = f.note ? `<div class="banner b-note">${ic('file')}<div><b>Note from ${esc(added?.model || 'the author')}.</b> ${esc(f.note)}</div></div>` : '';
+  const note = f.note ? `<div class="banner b-note">${ic('file')}<div><b>Note from ${esc(author?.model || 'the author')}.</b> ${esc(f.note)}</div></div>` : '';
+  // Every check and revision in order; a check made before the version shown says which one it read.
+  const versionAt = step => f.versions.filter(v => v.step < step).pop();
+  const events = [...f.all.map(e => ({ step: e.step, e })), ...f.versions.slice(1).map(r => ({ step: r.step, r }))].sort((a, b) => a.step - b.step || (a.r ? 1 : 0) - (b.r ? 1 : 0));
   const trail = [`<li class="t-add"><span class="when">${f.step ? `Step ${f.step} · ${fmtDate(added.date)}` : `Base · ${fmtDate(STEPS[0]?.date)}`}</span>${f.step ? `Added by ${byWho(f.step, added.model)}` : 'Written for the base set and checked by hand'}</li>`]
-    .concat(f.ev.map(e => {
+    .concat(events.map(({ e, r }) => {
+      if (r) return `<li class="t-rev"><span class="when">Step ${r.step} · ${fmtDate(STEPS[r.step]?.date)}</span>${esc(versionName(r))}: written again by ${byWho(r.step, STEPS[r.step]?.model)}</li>`;
       const cls = { confirmed: 't-ok', corrected: 't-fix', disputed: 't-warn' }[e.verdict] || '';
       const what = { confirmed: 'Confirmed', corrected: `Corrected the ${esc(e.field)}`, disputed: 'Disputed' }[e.verdict] || esc(e.verdict);
-      return `<li class="${cls}"><span class="when">Step ${e.step} · ${fmtDate(STEPS[e.step]?.date)}</span>${what} by ${byWho(e.step, e.model)} · ${srcLink(e.source)}</li>`;
+      const on = f.version && e.step <= f.revStep ? ` · on the ${versionName(versionAt(e.step)) === 'Original' ? 'original' : esc(versionName(versionAt(e.step)))}` : '';
+      return `<li class="${cls}"><span class="when">Step ${e.step} · ${fmtDate(STEPS[e.step]?.date)}</span>${what} by ${byWho(e.step, e.model)}${on} · ${srcLink(e.source)}</li>`;
     })).join('');
+  const prev = f.versions.length > 1 ? f.versions[f.versions.length - 2] : null;
+  const changes = prev ? `<section class="dr-sec"><h3 class="label">What changed in ${esc(versionName(f.version))}</h3><p class="chg-note">Compared with the ${prev.rev ? esc(versionName(prev)) : 'original'} file (step ${prev.step}): struck words were removed, underlined words added.</p>${changesHTML(prev, f.version)}</section>` : '';
+  const fileOf = v => GH ? `${GH}/blob/${(STEPS[v.step] || STEPS[0]).sha}/${v.file}` : null;
+  const files = f.versions.slice().reverse().map(v => `<details class="file"><summary>${ic('file')}${f.versions.length > 1 ? `${esc(versionName(v))} · step ${v.step}${v.step ? ` · ${esc(STEPS[v.step]?.model || '')}` : ''}, as written` : 'Source file, as written'}</summary><p class="file-note">This file never changes. ${f.versions.length > 1 ? 'A revision is a new file; ' : ''}Corrections live in the guestbook and are applied when the site is built.${fileOf(v) ? ` ${link(fileOf(v), 'See it on GitHub')}` : ''}</p><pre class="code"><code>${rawHTML(v.raw)}</code></pre></details>`).join('');
   const specs = [];
   if (f.specs) Object.entries(f.specs).forEach(([a, b]) => specs.push([a === 'parameters' ? 'Parameters' : a === 'context' ? 'Context' : a, b]));
   if (f.open_weights !== null) specs.push(['Open weights', f.open_weights ? 'Yes' : 'No']);
-  const fileUrl = GH ? `${GH}/blob/${(added || STEPS[0]).sha}/${f.file}` : null;
   const d = $('#drawer');
   d.innerHTML = `<div class="dr-top"><span class="label">Fact</span><span class="dr-file">${esc(f.file)}</span><button type="button" class="dr-copy" id="dr-copy">${ic('link')}<span>Copy link</span></button><button type="button" class="icon-btn" id="dr-close" aria-label="Close">${ic('x')}</button></div>
     <div class="dr-meta">${kindTag(f.kind)}<span class="date">${fmtDate(f.date, f.precision)}</span>${statusBadge(f.status)}</div>
     <h2 class="dr-title" id="dr-title">${esc(f.title)}</h2>
     <p class="dr-lab">${mark(f.lab)}${esc(f.lab)}</p>
-    ${banners}${self}${note}
+    ${banners}${revised}${self}${note}
     <section class="dr-sec"><h3 class="label">What happened</h3><div class="serif">${md(f.happened)}</div></section>
     <section class="dr-sec"><h3 class="label">Why it matters</h3><div class="serif">${md(f.matters)}</div></section>
     ${specs.length ? `<dl class="specs">${specs.map(([a, b]) => `<div><dt>${esc(a)}</dt><dd>${esc(b)}</dd></div>`).join('')}</dl>` : ''}
     <section class="dr-sec"><h3 class="label">Sources</h3><ul class="srcs">${f.sources.map(s => `<li>${link(s.url, `<span class="src-title">${esc(s.title || s.url)}</span><span class="src-dom">${esc(domain(s.url))}</span>`)}${s.primary ? `<span class="pills"><span class="pill p-ok">${ic('check')}Primary source</span></span>` : ''}</li>`).join('')}</ul></section>
+    ${changes}
     <section class="dr-sec"><h3 class="label">History</h3><ol class="trail">${trail}</ol></section>
-    <details class="file"><summary>${ic('file')}Source file, as written</summary><p class="file-note">This file never changes. Corrections live in the guestbook and are applied when the site is built.${fileUrl ? ` ${link(fileUrl, 'See it on GitHub')}` : ''}</p><pre class="code"><code>${rawHTML(f.raw)}</code></pre></details>`;
+    ${files}`;
   S.open = id; S.opener = opener || document.activeElement;
   // The page behind is out of reach while the panel is open: a real dialog for keyboards and screen readers.
   $('.frame').inert = true;

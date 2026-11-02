@@ -3,6 +3,8 @@
 // (facts and guestbook entries written by the models, one commit per Relay
 // step), follows the Relay's main line from the base commit, and writes
 // dist/index.html with every version's data inside, plus dist/data.json.
+// A revision (facts/<year>-<slug>-rev<N>.md, replaces: <id>) is a later version of
+// a fact: it goes to `revisions`, and the page shows the last one of each fact.
 // Model text is data: the page escapes all of it, and no model code exists here.
 //
 //   DATA_REPO  the data repo to read (default: Ezarwebmaster/llm-history)
@@ -69,7 +71,7 @@ const LAB_LOGOS = {
   Google: 'google', 'Mistral AI': 'mistral', NVIDIA: 'nvidia', DeepSeek: 'deepseek', Cohere: 'cohere', Alibaba: 'alibaba',
 }
 
-const facts = [], entries = [], problems = []
+const facts = [], revisions = [], entries = [], problems = []
 function read(sha, path, step) {
   const raw = git('show', `${sha}:${path}`)
   let parsed
@@ -77,8 +79,9 @@ function read(sha, path, step) {
   const d = parsed.data
   if (path.startsWith('facts/')) {
     const [happened = '', matters = ''] = parsed.body.split(/^##\s*why it matters\s*$/im).map(s => s.replace(/^##\s*what happened\s*$/im, '').trim())
-    facts.push({
-      id: path.slice(6, -3), step, file: path,
+    const replaces = typeof d.replaces === 'string' && /^\d{4}-[a-z0-9-]+$/.test(d.replaces) ? d.replaces : null
+    ;(replaces ? revisions : facts).push({
+      id: path.slice(6, -3), step, file: path, ...(replaces ? { of: replaces, rev: Number(path.match(/-rev(\d+)\.md$/)?.[1]) || 0 } : {}),
       title: str(d.title), date: str(d.date), precision: str(d.date_precision) || 'day', lab: labName(d.lab), kind: str(d.kind),
       open_weights: typeof d.open_weights === 'boolean' ? d.open_weights : null, about_me: d.about_me === true,
       short: str(d.short), specs: obj(d.specs), note: str(d.note),
@@ -94,7 +97,7 @@ function read(sha, path, step) {
       competitors: list(d.competitors).map(c => ({ name: str(c?.name), lab: labName(c?.lab), benchmark: str(c?.benchmark), mine: str(c?.mine), theirs: str(c?.theirs), source: str(c?.source), note: str(c?.note) })),
       limitation: { text: str(d.limitation?.text), source: str(d.limitation?.source) },
       sources: list(d.sources).map(s => ({ url: str(s?.url), title: str(s?.title) })),
-      added: list(d.added).map(String),
+      added: list(d.added).map(String), revised: list(d.revised).map(String),
       checked: list(d.checked).map(c => ({ fact: c?.fact != null ? String(c.fact) : null, entry: Number.isInteger(c?.entry) ? c.entry : null, verdict: str(c?.verdict), field: str(c?.field), was: str(c?.was), now: str(c?.now), note: str(c?.note), source: str(c?.source) })),
       body: parsed.body.trim(), raw,
     })
@@ -123,11 +126,19 @@ stepShas.forEach((sha, i) => {
   }
 })
 
+// Revisions hang on their fact; a check may name a revision's id, which leads to the
+// same fact (c.version keeps the id it named).
+const factIds = new Set(facts.map(f => f.id))
+for (const r of revisions.filter(r => !factIds.has(r.of))) problems.push(`${r.file} (step ${r.step}): replaces ${r.of}, which is not a fact, ignored`)
+revisions.splice(0, revisions.length, ...revisions.filter(r => factIds.has(r.of)).sort((a, b) => a.step - b.step || a.rev - b.rev))
+const origOf = new Map(revisions.map(r => [r.id, r.of]))
+for (const e of entries) for (const c of e.checked) if (c.fact && origOf.has(c.fact)) Object.assign(c, { version: c.fact, fact: origOf.get(c.fact) })
+
 // The logos of the labs in the data. A file that is missing, edited since it was
 // vendored (sha256) or refused by lib/logo.mjs leaves that lab on its monogram.
 const sha256 = Object.fromEntries(Object.values(JSON.parse(readFileSync('logos/SOURCES.json', 'utf8'))).flatMap(p => Object.entries(p.files).map(([id, f]) => [id, f.sha256])))
 const logos = {}, symbols = []
-for (const lab of new Set([...facts.map(f => f.lab), ...entries.flatMap(e => [e.lab, ...e.competitors.map(c => c.lab)])])) {
+for (const lab of new Set([...facts.map(f => f.lab), ...revisions.map(r => r.lab), ...entries.flatMap(e => [e.lab, ...e.competitors.map(c => c.lab)])])) {
   if (!Object.hasOwn(LAB_LOGOS, lab)) continue
   const id = LAB_LOGOS[lab]
   try {
@@ -138,24 +149,30 @@ for (const lab of new Set([...facts.map(f => f.lab), ...entries.flatMap(e => [e.
   } catch (e) { problems.push(`logos/${id}.svg (${lab}): ${e.message}, monogram shown`) }
 }
 
-const data = { builtAt: new Date().toISOString(), github, branch: line, versions, facts, entries, logos }
+const data = { builtAt: new Date().toISOString(), github, branch: line, versions, facts, revisions, entries, logos }
 const json = JSON.stringify(data)
 
 // A plain list of the latest version for readers without JavaScript and for
 // search engines. The app replaces it.
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]))
-// With the guestbook's corrections applied, as the page shows them.
+// Each fact in its last version, with the guestbook's corrections since that
+// version applied, as the page shows them. Checks made at the step of a
+// revision were made on the version before it.
+const lastRev = new Map(revisions.map(r => [r.of, r]))
 const fixedDate = new Map(), flag = new Map()
 for (const e of entries.slice().sort((a, b) => a.step - b.step)) for (const c of e.checked) {
-  if (!c.fact) continue
+  if (!c.fact || e.step <= (lastRev.get(c.fact)?.step ?? -1)) continue
   if (c.verdict === 'corrected' && c.field === 'date' && /^\d{4}-\d{2}-\d{2}$/.test(c.now)) fixedDate.set(c.fact, c.now)
   if (c.verdict === 'disputed' || c.verdict === 'corrected') flag.set(c.fact, flag.get(c.fact) === 'disputed' ? 'disputed' : c.verdict)
 }
-const shown = facts.map(f => ({ ...f, date: fixedDate.get(f.id) || f.date })).sort((a, b) => a.date.localeCompare(b.date))
+const shown = facts.map(f => {
+  const v = lastRev.get(f.id)
+  return { ...f, ...(v ? { title: v.title, date: v.date, precision: v.precision, lab: v.lab, short: v.short, sources: v.sources } : {}), revised: v ? v.rev : 0, date: fixedDate.get(f.id) || (v || f).date }
+}).sort((a, b) => a.date.localeCompare(b.date))
 const titleOf = Object.fromEntries(facts.map(f => [f.id, f.title]))
 const modelOf = Object.fromEntries(entries.map(e => [e.n, e.model]))
 const flagged = entries.slice().sort((a, b) => b.step - a.step).flatMap(e => e.checked.filter(c => c.verdict === 'corrected' || c.verdict === 'disputed').map(c => ({ ...c, by: e.model, step: e.step })))
-const noscript = `<section class="static"><h2>Timeline · ${shown.length} facts</h2><ol>${shown.map(f => `<li><b>${esc(f.date.slice(0, f.precision === 'year' ? 4 : 10))} · ${esc(f.title)}</b> (${esc(f.lab)}${flag.has(f.id) ? `, ${flag.get(f.id)} by a later model` : ''}). ${esc(f.short)} ${f.sources.filter(s => /^https:\/\//.test(s.url)).map(s => `<a href="${esc(s.url)}" rel="noopener">${esc(s.title || 'Source')}</a>`).join(' · ')}</li>`).join('')}</ol>
+const noscript = `<section class="static"><h2>Timeline · ${shown.length} facts</h2><ol>${shown.map(f => `<li><b>${esc(f.date.slice(0, f.precision === 'year' ? 4 : f.precision === 'month' ? 7 : 10))} · ${esc(f.title)}</b> (${esc(f.lab)}${f.revised ? `, revision ${f.revised}` : ''}${flag.has(f.id) ? `, ${flag.get(f.id)} by a later model` : ''}). ${esc(f.short)} ${f.sources.filter(s => /^https:\/\//.test(s.url)).map(s => `<a href="${esc(s.url)}" rel="noopener">${esc(s.title || 'Source')}</a>`).join(' · ')}</li>`).join('')}</ol>
 <h2>Corrections and disputes · ${flagged.length}</h2><ol>${flagged.map(c => `<li><b>${c.verdict === 'corrected' ? 'Corrected' : 'Disputed'} at step ${c.step} by ${esc(c.by)}:</b> ${c.fact ? esc(titleOf[c.fact] || c.fact) : `guestbook entry ${c.entry}${modelOf[c.entry] ? ` (${esc(modelOf[c.entry])})` : ''}`}${c.field ? `, ${esc(c.field)}` : ''}${c.verdict === 'corrected' ? ` ${esc(c.was)} → ${esc(c.now)}` : ''}. ${esc(c.note)}</li>`).join('')}</ol>
 <h2>Guestbook · ${entries.length} entries</h2><ol>${entries.slice().sort((a, b) => a.n - b.n).map(e => `<li><b>Entry ${e.n} · ${esc(e.model)}</b> (${esc(e.lab)}). ${esc(e.body)}</li>`).join('')}</ol></section>`
 
@@ -169,4 +186,4 @@ const page = readFileSync('index.html', 'utf8')
 writeFileSync(`${OUT}/index.html`, page)
 writeFileSync(`${OUT}/data.json`, json)
 for (const p of problems) console.warn(`! ${p}`)
-console.log(`Built ${OUT}/ from ${line}: ${versions.length - 1} step(s), ${facts.length} facts, ${entries.length} guestbook entries.`)
+console.log(`Built ${OUT}/ from ${line}: ${versions.length - 1} step(s), ${facts.length} facts, ${revisions.length} revision(s), ${entries.length} guestbook entries.`)
