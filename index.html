@@ -29,7 +29,10 @@
   --violet: #6D28D9; --violet-dim: #EDE9FE;
   --rev: #1D4ED8; --rev-dim: #DBEAFE;
   --good: #047857; --good-dim: #D1FAE5; --warn: #B45309; --warn-dim: #FEF3C7;
-  --k-model: #0D9488; --k-research: #7C3AED; --k-product: #E8590C; --k-policy: #6E7B78;
+  --k-model: #0D9488; --k-research: #7C3AED; --k-product: #E8590C; --k-policy: #9F1239;
+  /* The same kinds, lighter, on the ink of the active era card. */
+  --ki-model: #2DD4BF; --ki-research: #B9A3FB; --ki-product: #FB923C; --ki-policy: #F0507A;
+  --active-ring: transparent;
   --scrim: rgba(8, 18, 17, 0.36);
   --shadow-card: 0 1px 2px rgba(16, 32, 31, 0.04), 0 6px 20px -8px rgba(16, 32, 31, 0.10);
   --shadow-md: 0 2px 4px rgba(16, 32, 31, 0.05), 0 14px 32px -10px rgba(16, 32, 31, 0.16);
@@ -53,7 +56,7 @@
     --violet: #C4B5FD; --violet-dim: rgba(140, 108, 235, 0.18);
     --rev: #93C5FD; --rev-dim: rgba(59, 130, 246, 0.18);
     --good: #6EE7B7; --good-dim: rgba(16, 185, 129, 0.16); --warn: #FCD34D; --warn-dim: rgba(245, 158, 11, 0.16);
-    --k-model: #0D9F8F; --k-research: #8C6CEB; --k-product: #E2651F; --k-policy: #8C9C99;
+    --k-model: #0D9F8F; --k-research: #8C6CEB; --k-product: #DC7212; --k-policy: #CB2350; --active-ring: #2DD4BF;
     --scrim: rgba(0, 0, 0, 0.55);
     --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 6px 20px -8px rgba(0, 0, 0, 0.5);
     --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.3), 0 14px 32px -10px rgba(0, 0, 0, 0.6);
@@ -73,7 +76,7 @@
   --violet: #C4B5FD; --violet-dim: rgba(140, 108, 235, 0.18);
   --rev: #93C5FD; --rev-dim: rgba(59, 130, 246, 0.18);
   --good: #6EE7B7; --good-dim: rgba(16, 185, 129, 0.16); --warn: #FCD34D; --warn-dim: rgba(245, 158, 11, 0.16);
-  --k-model: #0D9F8F; --k-research: #8C6CEB; --k-product: #E2651F; --k-policy: #8C9C99;
+  --k-model: #0D9F8F; --k-research: #8C6CEB; --k-product: #DC7212; --k-policy: #CB2350; --active-ring: #2DD4BF;
   --scrim: rgba(0, 0, 0, 0.55);
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 6px 20px -8px rgba(0, 0, 0, 0.5);
   --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.3), 0 14px 32px -10px rgba(0, 0, 0, 0.6);
@@ -197,7 +200,7 @@ h1, h2, h3 { text-wrap: balance; }
 .kd-model { background: var(--k-model); }
 .kd-research { background: var(--k-research); }
 .kd-product { background: var(--k-product); }
-.kd-policy { background: transparent; box-shadow: inset 0 0 0 2px var(--k-policy); }
+.kd-policy { background: var(--k-policy); }
 .tool-sep { width: 1px; height: 22px; background: var(--line-2); margin: 0 4px; }
 .select, .search { height: 32px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--text); font: 500 12.5px var(--font-sans); }
 .select { padding: 0 28px 0 12px; appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--text-3) 50%), linear-gradient(135deg, var(--text-3) 50%, transparent 50%); background-position: calc(100% - 15px) 14px, calc(100% - 11px) 14px; background-size: 4px 4px; background-repeat: no-repeat; cursor: pointer; }
@@ -207,18 +210,40 @@ h1, h2, h3 { text-wrap: balance; }
 .search::placeholder { color: var(--text-3); }
 @media (max-width: 640px) { .search-wrap { margin-left: 0; flex: 1 1 100%; } .tool-sep { display: none; } }
 
-/* ── Era minimap ── */
-.minimap { display: flex; gap: 6px; padding: 0 4px 14px; overflow-x: auto; scrollbar-width: none; }
-.minimap::-webkit-scrollbar { display: none; }
-.band { min-width: 150px; text-align: left; display: grid; gap: 4px; align-content: start; padding: 10px 12px 11px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s; }
+/* ── Era map: a card per era, wider with more facts, and a rug of its facts by date ── */
+.minimap { display: flex; gap: 6px; padding: 0 4px 14px; }
+.band { flex: 1 1 0; min-width: 150px; text-align: left; display: grid; grid-template-rows: auto auto 1fr; gap: 4px; padding: 10px 12px 11px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s; }
 .band:hover { border-color: var(--line-2); }
 .band:disabled { opacity: 0.5; cursor: default; }
-.band-name { font: 700 13px/1.2 var(--font-display); letter-spacing: -0.01em; }
+.band-top { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; }
+.band-name { min-width: 0; font: 700 13px/1.2 var(--font-display); letter-spacing: -0.01em; text-wrap: balance; }
+.band-n { flex: none; font: 600 11px/1 var(--font-mono); color: var(--accent-strong); }
 .band-meta { font: 500 11px/1.2 var(--font-mono); color: var(--text-3); white-space: nowrap; }
-.band-dots { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 4px; min-height: 9px; }
-.band.is-on { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }
+.band-meta .short { display: none; }
+.rug { position: relative; align-self: end; display: block; height: 12px; margin-top: 6px; border-radius: 4px; background: var(--surface-2); overflow: hidden; }
+.rg { position: absolute; top: 2px; bottom: 2px; width: 2px; margin-left: -1px; border-radius: 1px; opacity: 0.8; }
+.rg-model { background: var(--k-model); }
+.rg-research { background: var(--k-research); }
+.rg-product { background: var(--k-product); }
+.rg-policy { background: var(--k-policy); }
+/* The ink card hardly differs from the dark surface: dark mode adds a ring. */
+.band.is-on { background: var(--ink); color: var(--on-ink); border-color: var(--ink); box-shadow: 0 0 0 2px var(--active-ring); }
 .band.is-on .band-meta { color: var(--on-ink-2); }
-.band.is-on .kd-policy { box-shadow: inset 0 0 0 2px var(--on-ink-2); }
+.band.is-on .band-n { color: var(--mint); }
+.band.is-on .rug { background: rgba(255, 255, 255, 0.08); }
+.band.is-on .rg-model { background: var(--ki-model); }
+.band.is-on .rg-research { background: var(--ki-research); }
+.band.is-on .rg-product { background: var(--ki-product); }
+.band.is-on .rg-policy { background: var(--ki-policy); }
+.band-break { display: none; }
+/* Too narrow for six cards: two rows of three, in order. On a phone the count joins the short range. */
+@media (max-width: 1040px) { .minimap { flex-wrap: wrap; row-gap: 3px; } .band-break { display: block; flex-basis: 100%; height: 0; } }
+@media (max-width: 520px) {
+  .band { min-width: 92px; padding: 8px 9px 9px; border-radius: 12px; }
+  .band-name { font-size: 12px; }
+  .band-n, .band-meta .full { display: none; }
+  .band-meta .short { display: inline; }
+}
 
 /* ── Strip (compressed horizontal timeline) ── */
 .strip-wrap { position: relative; }
@@ -818,14 +843,17 @@ a.kpi:hover .kpi-l { color: var(--on-ink); }
 /* ── Data: written into the page by build.mjs ── */
 const DATA = JSON.parse(document.getElementById('data').textContent || 'null') || { versions: [], facts: [], entries: [] };
 const KINDS = { model: 'Model', research: 'Research', product: 'Product', policy: 'Policy' };
+// Each era opens on the month of its first landmark; a fact belongs to the last era opened by its date.
+// The data repo's check.mjs lists the same eras for the empty periods it asks models to fill.
 const ERAS = [
-  { id: 'e1', name: 'Before transformers', range: '1950 – 2016' },
-  { id: 'e2', name: 'The Transformer', range: '2017 – 2019' },
-  { id: 'e3', name: 'Scaling up', range: '2020 – Oct 2022' },
-  { id: 'e4', name: 'The chatbot era', range: 'Nov 2022 – 2024' },
-  { id: 'e5', name: 'Reasoning and agents', range: '2025 – today' },
+  { id: 'e1', name: 'Early AI', range: '1950 – 1989', short: '1950–89', from: '1950' },
+  { id: 'e2', name: 'Learning from Data', range: '1990 – 2016', short: '1990–2016', from: '1990' },
+  { id: 'e3', name: 'The Transformer', range: '2017 – Apr 2020', short: '2017–20', from: '2017' },
+  { id: 'e4', name: 'Scaling Up', range: 'May 2020 – Oct 2022', short: '2020–22', from: '2020-05' },
+  { id: 'e5', name: 'The Chatbot Era', range: 'Nov 2022 – Aug 2024', short: '2022–24', from: '2022-11' },
+  { id: 'e6', name: 'Reasoning and Agents', range: 'Sep 2024 – today', short: '2024–', from: '2024-09' },
 ];
-const eraOf = d => d < '2017' ? 'e1' : d < '2020' ? 'e2' : d < '2022-11' ? 'e3' : d < '2025' ? 'e4' : 'e5';
+const eraOf = d => ERAS.reduce((id, e) => d >= e.from ? e.id : id, ERAS[0].id);
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const LONG_MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 // A year with more facts than this is split by month, on the strip and in the list.
@@ -914,7 +942,7 @@ const byWho = (step, model) => { const n = entryOfStep.get(step)?.n; return n ? 
 const targetOf = c => c.fact
   ? (byId[c.fact] ? `<button type="button" class="linkish" data-id="${esc(c.fact)}">${esc(byId[c.fact].title)}</button>${c.version ? ` <span class="rev-n">${esc(versionName(REVISIONS.find(r => r.id === c.version) || {}))}</span>` : ''}` : `<span>${esc(c.fact)}</span>`)
   : `<a class="linkish" href="#entry-${c.entry}">Entry ${c.entry}${entryByN[c.entry] ? ` · ${esc(entryByN[c.entry].model)}` : ''}</a>`;
-// An id is given once per render: a year split across two eras (2022) keeps one anchor.
+// An id is given once per render: a year split across two eras (2020, 2022, 2024) keeps one anchor.
 let usedIds = new Set();
 const idOnce = id => usedIds.has(id) ? '' : (usedIds.add(id), ` id="${id}"`);
 
@@ -1072,6 +1100,18 @@ function planYear(fs) {
 }
 const yearsOf = (facts, desc = false) => { const ys = [...new Set(facts.map(f => +f.date.slice(0, 4)))].sort((a, b) => a - b); return desc ? ys.reverse() : ys; };
 const factsOfYear = (facts, y) => facts.filter(f => +f.date.slice(0, 4) === y);
+// The month groups of year y inside one era, or null when that part of the year is not dense.
+// A year split across two eras numbers its groups on from the earlier part, so the strip,
+// the list and "Jump to" share one anchor per group.
+function planPart(list, eraId, y) {
+  let offset = 0;
+  for (const era of ERAS) {
+    const fs = factsOfYear(list.filter(f => eraOf(f.date) === era.id), y), plan = isDense(fs) ? planYear(fs) : null;
+    if (era.id === eraId) return plan && plan.map(b => ({ ...b, i: b.i + offset }));
+    if (plan) offset += plan.length;
+  }
+  return null;
+}
 
 function renderStrip(list) {
   if (!list.length) { $('#strip').innerHTML = emptyHTML(); return; }
@@ -1086,12 +1126,12 @@ function renderStrip(list) {
         const a = years[i - 1] + 1, b = y - 1, n = b - a + 1;
         html += `<div class="gap" title="No facts yet from ${a} to ${b}"><span class="gap-axis"></span><span class="gap-txt">${a === b ? a : `${a}–${b}`} · ${plural(n, 'quiet year')}</span></div>`;
       }
-      const fs = factsOfYear(facts, y);
-      if (!isDense(fs)) {
+      const fs = factsOfYear(facts, y), plan = planPart(list, era.id, y);
+      if (!plan) {
         html += `<div class="ycol"${idOnce(`sy-${y}`)}><div class="yhead"><span class="ydot"></span><span class="ytxt">${y}</span><span class="ycount">${fs.length}</span></div>${fs.map(cardHTML).join('')}</div>`;
         return;
       }
-      html += `<div class="ygroup"${idOnce(`sy-${y}`)}><div class="yhead"><span class="ystick"><span class="ydot"></span><span class="ytxt">${y}</span><span class="ycount">${fs.length}</span></span></div><div class="mcols">${planYear(fs).map(b => {
+      html += `<div class="ygroup"${idOnce(`sy-${y}`)}><div class="yhead"><span class="ystick"><span class="ydot"></span><span class="ytxt">${y}</span><span class="ycount">${fs.length}</span></span></div><div class="mcols">${plan.map(b => {
         const packed = b.months.length > 1;
         return `<div class="mblock"${idOnce(`sm-${y}-${b.i}`)}><div class="mhead2${packed ? ' is-packed' : ''}"><span class="m">${b.label}</span><span class="y">${y}</span><span class="ycount">${b.n}</span></div><div class="mblock-cols">${b.cols.map(col => `<div class="mcol">${packed ? monthsOf(col).map(m => `<div class="mlabel">${MONTHS[m.mo]} <span class="mn">${m.facts.length}</span></div>${m.facts.map(cardHTML).join('')}`).join('') : col.map(cardHTML).join('')}</div>`).join('')}</div></div>`;
       }).join('')}</div></div>`;
@@ -1109,11 +1149,11 @@ function renderList(list) {
     if (!facts.length) return '';
     return `<section class="list-era" id="list-${era.id}"><div class="list-era-head"><h3>${esc(era.name)}</h3><span class="era-range">${era.range} · ${plural(facts.length, 'fact')}</span></div>
       ${yearsOf(facts, newest).map(y => {
-        const fs = factsOfYear(facts, y), dense = isDense(fs);
+        const fs = factsOfYear(facts, y), plan = planPart(list, era.id, y), dense = !!plan;
         let rows;
         if (dense) {
           // Each month group of the strip anchors on the month the reader meets first.
-          const anchor = new Map(planYear(fs).map(b => [(newest ? b.months[b.months.length - 1] : b.months[0]).mo, b.i]));
+          const anchor = new Map(plan.map(b => [(newest ? b.months[b.months.length - 1] : b.months[0]).mo, b.i]));
           const months = monthsOf(fs);
           rows = (newest ? months.reverse() : months).map(m => `<div class="lmonth"${anchor.has(m.mo) ? idOnce(`lm-${y}-${anchor.get(m.mo)}`) : ''}><span>${LONG_MONTHS[m.mo]} ${y}</span><span class="mn">${m.facts.length}</span></div>${(newest ? [...m.facts].reverse() : m.facts).map(rowHTML).join('')}`).join('');
         } else rows = (newest ? [...fs].reverse() : fs).map(rowHTML).join('');
@@ -1123,11 +1163,16 @@ function renderList(list) {
 }
 
 // "Jump to": the dense years and their month groups, with a dot where the version adds facts.
+// A year split across two eras gets one year button and the groups of each dense part.
 function renderJump(list) {
-  const dense = yearsOf(list).map(y => [y, factsOfYear(list, y)]).filter(([, fs]) => isDense(fs));
+  const parts = [];
+  for (const era of ERAS) for (const y of yearsOf(list.filter(f => eraOf(f.date) === era.id))) {
+    const plan = planPart(list, era.id, y);
+    if (plan) parts.push({ y, plan, first: !parts.some(p => p.y === y) });
+  }
   const bar = $('#jump');
-  bar.hidden = !dense.length;
-  bar.innerHTML = dense.length ? `<span class="jl">Jump to</span>${dense.map(([y, fs]) => `<button type="button" class="is-y" data-jump="${y}">${y}<b>${fs.length}</b></button>${planYear(fs).map(b => `<button type="button" data-jump="${y}-${b.i}" aria-label="${b.label} ${y}, ${plural(b.n, 'fact')}">${b.label}<b>${b.n}</b>${b.cols.flat().some(isMarked) ? '<i class="new" title="New or revised in this version"></i>' : ''}</button>`).join('')}`).join('')}` : '';
+  bar.hidden = !parts.length;
+  bar.innerHTML = parts.length ? `<span class="jl">Jump to</span>${parts.map(({ y, plan, first }) => `${first ? `<button type="button" class="is-y" data-jump="${y}">${y}<b>${factsOfYear(list, y).length}</b></button>` : ''}${plan.map(b => `<button type="button" data-jump="${y}-${b.i}" aria-label="${b.label} ${y}, ${plural(b.n, 'fact')}">${b.label}<b>${b.n}</b>${b.cols.flat().some(isMarked) ? '<i class="new" title="New or revised in this version"></i>' : ''}</button>`).join('')}`).join('')}` : '';
 }
 function jumpTo(key) {
   const [y, i] = key.split('-');
@@ -1150,15 +1195,22 @@ function syncJump() {
   });
 }
 
+// The era map: a card per era, grown by the square root of its facts so the busiest era is the
+// widest without crushing the others. Its rug draws each fact at its date on a scale fixed per era;
+// the last era ends at the newest fact of the whole timeline, so filters and older steps never move a tick.
+const fracYear = d => { const [y, m = 1, dd = 1] = d.split('-').map(Number); return y + (m - 1) / 12 + (dd - 1) / 365; };
+const NEWEST = DATA.facts.reduce((m, f) => f.date > m ? f.date : m, '');
 function renderMinimap(list) {
-  $('#minimap').innerHTML = ERAS.map(era => {
+  const end = NEWEST ? fracYear(NEWEST) + 0.04 : new Date().getFullYear() + 1;
+  $('#minimap').innerHTML = ERAS.map((era, i) => {
     const fs = list.filter(f => eraOf(f.date) === era.id);
-    const cols = new Set(fs.map(f => f.date.slice(0, 4))).size;
-    return `<button type="button" class="band" data-era="${era.id}" style="flex:${Math.max(1.4, cols)} 1 0"${fs.length ? '' : ' disabled'} aria-label="${esc(era.name)}, ${era.range}, ${plural(fs.length, 'fact')}">
-      <span class="band-name">${esc(era.name)}</span><span class="band-meta">${era.range} · ${fs.length}</span>
-      <span class="band-dots" aria-hidden="true">${fs.map(f => `<i class="kd kd-${KINDS[f.kind] ? f.kind : 'policy'}"></i>`).join('')}</span></button>`;
+    const a = fracYear(era.from), z = ERAS[i + 1] ? fracYear(ERAS[i + 1].from) : end;
+    const ticks = fs.map(f => `<i class="rg rg-${KINDS[f.kind] ? f.kind : 'policy'}" style="left:${Math.min(99.5, Math.max(0.5, 100 * (fracYear(f.date) - a) / (z - a))).toFixed(2)}%"></i>`).join('');
+    return `${i === 3 ? '<span class="band-break" aria-hidden="true"></span>' : ''}<button type="button" class="band" data-era="${era.id}" style="flex-grow:${Math.sqrt(Math.max(1, fs.length)).toFixed(2)}"${fs.length ? '' : ' disabled'} aria-label="${esc(era.name)}, ${era.range}, ${plural(fs.length, 'fact')}">
+      <span class="band-top"><span class="band-name">${esc(era.name)}</span><span class="band-n">${fs.length}</span></span>
+      <span class="band-meta"><span class="full">${era.range}</span><span class="short">${era.short} · ${fs.length}</span></span>
+      <span class="rug" aria-hidden="true">${ticks}</span></button>`;
   }).join('');
-  syncBands();
 }
 
 function renderTimeline() {
@@ -1174,6 +1226,8 @@ function renderTimeline() {
   renderMinimap(list);
   renderJump(list);
   if (strip) renderStrip(list); else renderList(list);
+  // After the strip: the active era is read from it.
+  syncBands();
   updateArrows();
   syncJump();
 }
@@ -1189,7 +1243,11 @@ function syncBands() {
       if (seen > best) { best = seen; active = g.dataset.era; }
     });
   }
-  document.querySelectorAll('.band').forEach(b => b.classList.toggle('is-on', b.dataset.era === active));
+  document.querySelectorAll('.band').forEach(b => {
+    const on = b.dataset.era === active;
+    b.classList.toggle('is-on', on);
+    if (on) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current');
+  });
 }
 function updateArrows() {
   const s = $('#strip');
