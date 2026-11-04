@@ -93,6 +93,10 @@ function read(sha, path, step) {
       n: Number(d.entry) || Number(path.slice(10, 13)), step, file: path,
       model: str(d.model), lab: labName(d.lab), released: str(d.released), predecessor: str(d.predecessor),
       knowledge_cutoff: str(d.knowledge_cutoff), good_at: str(d.good_at), note: str(d.note),
+      // Check v2.3: intro replaced good_at; timeline names the fact about the
+      // model's launch; a model that signed before writes a return.
+      intro: str(d.intro), timeline: str(d.timeline), timeline_note: str(d.timeline_note),
+      returning: Number.isInteger(d.returning) ? d.returning : null, since_last_visit: str(d.since_last_visit),
       benchmarks: list(d.benchmarks).map(b => ({ name: str(b?.name), score: str(b?.score), source: str(b?.source) })),
       competitors: list(d.competitors).map(c => ({ name: str(c?.name), lab: labName(c?.lab), benchmark: str(c?.benchmark), mine: str(c?.mine), theirs: str(c?.theirs), source: str(c?.source), note: str(c?.note) })),
       limitation: { text: str(d.limitation?.text), source: str(d.limitation?.source) },
