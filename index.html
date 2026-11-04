@@ -331,7 +331,7 @@ h1, h2, h3 { text-wrap: balance; }
 .gb-id h3, .gb-name { margin: 6px 0 3px; font: 800 18px/1.15 var(--font-display); letter-spacing: -0.02em; }
 .gb-lab { margin: 0; font-size: 12.5px; color: var(--text-2); }
 .gb-body { min-width: 0; display: grid; gap: 12px; }
-.gb-text { margin: 0; font: 400 16px/1.62 var(--font-serif); color: var(--text); max-width: 68ch; }
+.gb-text { margin: 0; font: 400 16px/1.62 var(--font-serif); color: var(--text); }
 .gb-sign { margin: -4px 0 0; font: italic 400 14.5px/1.4 var(--font-serif); color: var(--text-2); }
 .gb-row { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 10px; align-items: start; }
 @media (max-width: 520px) { .gb-row { grid-template-columns: minmax(0, 1fr); gap: 6px; } }
@@ -499,7 +499,7 @@ details.earlier > summary::before { content: ''; width: 7px; height: 7px; border
 details.earlier[open] > summary::before { transform: rotate(45deg); }
 details.earlier > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 8px; }
 .earlier-list { display: grid; gap: 8px; padding-top: 4px; }
-.gb-text { font: 400 16px/1.62 var(--font-serif); color: var(--text); max-width: 68ch; }
+.gb-text { font: 400 16px/1.62 var(--font-serif); color: var(--text); max-width: none; }
 .gb-text p { margin: 0 0 10px; }
 .gb-text p:last-child { margin: 0; }
 
