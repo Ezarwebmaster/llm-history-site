@@ -44,6 +44,9 @@
   --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
   --font-serif: 'Source Serif 4', Charter, 'Iowan Old Style', Georgia, serif;
   --r-frame: 28px; --r-card: 22px; --r-md: 14px; --r-sm: 10px;
+  --sp-xs: 4px; --sp-sm: 8px; --sp-md: 12px; --sp-lg: 16px;
+  --added-col: 112px; --t-ui: 200ms ease-in-out;
+  --fs-day: 20px; --fs-step-model: 12.5px; --fs-step-time: 11px;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -182,9 +185,12 @@ h1, h2, h3 { text-wrap: balance; }
 .sec-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 0 4px 12px; border-bottom: 1px solid var(--line); }
 .sec-head h2 { font: 700 21px/1.2 var(--font-display); letter-spacing: -0.02em; margin: 0; }
 .sec-count { color: var(--text-3); font-size: 14px; font-variant-numeric: tabular-nums; }
-.sec-tools { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.sec-tools { margin-left: auto; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .seg { display: inline-flex; gap: 2px; padding: 3px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); }
-.seg button { border: 0; background: transparent; padding: 5px 10px; border-radius: 9px; font-size: 12.5px; font-weight: 600; color: var(--text-2); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+.seg button { border: 0; background: transparent; padding: 5px 10px; border-radius: 9px; font-size: 12.5px; font-weight: 600; color: var(--text-2); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: background var(--t-ui), color var(--t-ui), transform var(--t-ui); }
+.seg button:hover { color: var(--text); background: var(--surface-2); }
+.seg button:active { transform: scale(0.98); }
+.seg button:disabled { opacity: 0.45; cursor: not-allowed; }
 .seg button[aria-pressed="true"] { background: var(--accent-dim); color: var(--accent-strong); }
 .icon-btn { width: 34px; height: 34px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); display: inline-grid; place-items: center; cursor: pointer; color: var(--text-2); transition: box-shadow 0.15s, color 0.15s; }
 .icon-btn:hover { box-shadow: var(--shadow-md); color: var(--text); }
@@ -575,7 +581,13 @@ details.earlier > summary:focus-visible { outline: 2px solid var(--accent); outl
 .jump .new { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); display: inline-block; margin-left: 6px; }
 .lmonth { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; gap: 10px; padding: 12px 12px 6px; background: var(--frame); font: 700 11.5px/1 var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-2); scroll-margin-top: 8px; }
 .lmonth::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.lmonth.is-step { text-transform: none; letter-spacing: 0; gap: var(--sp-sm); flex-wrap: wrap; }
+.lmonth.is-step .ls-n { text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent-strong); }
+.lmonth.is-step .ls-m { font: 700 var(--fs-step-model)/1.2 var(--font-display); color: var(--text); }
+.lmonth.is-step .ls-t { font: 500 var(--fs-step-time)/1 var(--font-mono); color: var(--text-3); }
 .list-year { scroll-margin-top: 8px; }
+.list-year.is-added { grid-template-columns: var(--added-col) minmax(0, 1fr); }
+.list-year.is-added .yl { font-size: var(--fs-day); }
 .list-year .yl small { display: block; font: 600 12px/1.4 var(--font-mono); color: var(--text-3); letter-spacing: 0; margin-top: 8px; }
 
 /* ── Readability, keyboard and small screens ── */
@@ -594,6 +606,7 @@ details.earlier > summary:focus-visible { outline: 2px solid var(--accent); outl
 @media (min-width: 1600px) { .frame { max-width: 1760px; } }
 @media (prefers-reduced-motion: reduce) { .strip, .steps { scroll-behavior: auto; } }
 @media (max-width: 640px) {
+  .list-year.is-added { grid-template-columns: minmax(0, 1fr); }
   .list-year .yl { position: sticky; top: 0; z-index: 3; background: var(--frame); padding: 8px 0 6px; }
   .list-year .yl small { display: inline; margin: 0 0 0 8px; }
   .lmonth { top: 38px; }
@@ -744,7 +757,11 @@ a.kpi:hover .kpi-l { color: var(--on-ink); }
             <button type="button" data-view="strip" aria-pressed="true"><svg class="ic" aria-hidden="true"><use href="#i-strip"/></svg>Strip</button>
             <button type="button" data-view="list" aria-pressed="false"><svg class="ic" aria-hidden="true"><use href="#i-list"/></svg>List</button>
           </div>
-          <div class="seg" id="order-wrap" hidden><button type="button" id="order">Newest first</button></div>
+          <div class="seg" id="order-wrap" role="group" aria-label="List order" hidden>
+            <button type="button" data-order="new" aria-pressed="true" aria-label="Order by event date, newest first" title="Event date, newest first">Newest</button>
+            <button type="button" data-order="old" aria-pressed="false" aria-label="Order by event date, oldest first" title="Event date, oldest first">Oldest</button>
+            <button type="button" data-order="added" aria-pressed="false" aria-label="Order by when models added or revised each fact, most recent first" title="Most recently added or revised by models">Recently added</button>
+          </div>
           <button class="icon-btn" type="button" id="prev" aria-label="Scroll back in time"><svg class="ic" aria-hidden="true"><use href="#i-left"/></svg></button>
           <button class="icon-btn" type="button" id="next" aria-label="Scroll forward in time"><svg class="ic" aria-hidden="true"><use href="#i-right"/></svg></button>
         </div>
@@ -973,7 +990,7 @@ const idOnce = id => usedIds.has(id) ? '' : (usedIds.add(id), ` id="${id}"`);
 // status: the Checks page filter (null = the default: facts not checked yet).
 const S = { step: STEPS.length - 1, kinds: new Set(Object.keys(KINDS)), lab: 'all', q: '', status: null, view: 'strip', order: 'new', open: null, opener: null, page: 'home' };
 try { const v = localStorage.getItem('llmh-view'); if (v === 'strip' || v === 'list') S.view = v; else if (innerWidth < 700) S.view = 'list'; } catch { if (innerWidth < 700) S.view = 'list'; }
-try { if (localStorage.getItem('llmh-order') === 'old') S.order = 'old'; } catch {}
+try { const o = localStorage.getItem('llmh-order'); if (o === 'old' || o === 'added') S.order = o; } catch {}
 
 const checksCache = new Map();
 function checksUpTo(s) {
@@ -1065,7 +1082,13 @@ const isNewAt = f => S.step > 0 && f.step === S.step;
 const isRevisedAt = f => S.step > 0 && f.revStep === S.step;
 const isMarked = f => isNewAt(f) || isRevisedAt(f);
 const markTag = f => isNewAt(f) ? '<b class="new-tag">New</b>' : isRevisedAt(f) ? '<b class="new-tag rev-tag">Revised</b>' : '';
-const byLine = f => f.version ? `${esc(versionName(f.version))} by ${esc(STEPS[f.revStep]?.model)} · step ${f.revStep}` : f.step === 0 ? 'Base set' : `Added by ${esc(STEPS[f.step]?.model)} · step ${f.step}`;
+const activityStep = f => f.revStep ?? f.step;
+const addedDayKey = step => step === 0 ? 'base' : (STEPS[step]?.date || '').slice(0, 10) || 'unknown';
+const byLine = (f, withDate = false) => {
+  const st = activityStep(f);
+  const when = withDate && st > 0 && STEPS[st]?.date ? ` · ${fmtDate(STEPS[st].date)}` : '';
+  return f.version ? `${esc(versionName(f.version))} by ${esc(STEPS[f.revStep]?.model)} · step ${f.revStep}${when}` : f.step === 0 ? 'Base set' : `Added by ${esc(STEPS[f.step]?.model)} · step ${f.step}${when}`;
+};
 const cardLabel = f => `${esc(f.title)}, ${fmtDate(f.date, f.precision)}, ${esc(f.lab)}. ${(STATUS[f.status] || STATUS.unchecked)[2]}${isNewAt(f) ? '. New' : isRevisedAt(f) ? '. Revised in this version' : ''}`;
 function cardHTML(f) {
   const isNew = isMarked(f);
@@ -1081,7 +1104,7 @@ function rowHTML(f) {
   const isNew = isMarked(f);
   return `<button type="button" class="row${isNew ? ' is-new' : ''}" data-id="${esc(f.id)}" aria-label="${cardLabel(f)}"><span class="date">${fmtDate(f.date, f.precision)}</span>
     <span class="row-main"><span class="row-title">${esc(f.title)}${markTag(f)}</span><span class="row-sub">${esc(f.short)}</span>
-    <span class="row-meta">${kindTag(f.kind)}<span class="lab">${mark(f.lab)}<span>${esc(f.lab)}</span></span><span>${byLine(f)}</span></span></span>
+    <span class="row-meta">${kindTag(f.kind)}<span class="lab">${mark(f.lab)}<span>${esc(f.lab)}</span></span><span>${byLine(f, true)}</span></span></span>
     ${statusBadge(f.status)}</button>`;
 }
 const emptyHTML = () => `<div class="empty"><b>No facts match these filters.</b>Try another lab, type or search.<br><button type="button" class="btn" data-clear>Clear filters</button></div>`;
@@ -1164,8 +1187,49 @@ function renderStrip(list) {
   $('#strip').innerHTML = html;
 }
 
+// Facts grouped by the day a model added (or last revised) them, newest day and step first.
+function addedDaysOf(list) {
+  const byDay = new Map();
+  for (const f of list) {
+    const step = activityStep(f), key = addedDayKey(step);
+    if (!byDay.has(key)) byDay.set(key, new Map());
+    const byStep = byDay.get(key);
+    if (!byStep.has(step)) byStep.set(step, []);
+    byStep.get(step).push(f);
+  }
+  const keys = [...byDay.keys()].sort((a, b) => a === 'base' ? 1 : b === 'base' ? -1 : b.localeCompare(a));
+  return keys.map(key => {
+    const steps = [...byDay.get(key).entries()].sort((a, b) => b[0] - a[0]).map(([step, facts]) => ({
+      step,
+      facts: facts.sort((a, b) => b.date.localeCompare(a.date) || a.title.localeCompare(b.title)),
+    }));
+    const facts = steps.flatMap(g => g.facts);
+    return { key, steps, facts };
+  });
+}
+
+function renderListAdded(list) {
+  const days = addedDaysOf(list);
+  $('#list').innerHTML = `<section class="list-era" aria-label="Facts by date added">${days.map(({ key, steps, facts }) => {
+    const isBase = key === 'base';
+    const dayTitle = isBase ? 'Base' : fmtDate(key).replace(/ \d{4}$/, '');
+    const daySub = isBase
+      ? `${plural(facts.length, 'fact')}${STEPS[0]?.date ? ` · ${fmtDate(STEPS[0].date)}` : ''}`
+      : `${key.slice(0, 4)} · ${plural(facts.length, 'fact')}`;
+    const rows = steps.map(({ step, facts: fs }) => {
+      if (step === 0) return fs.map(rowHTML).join('');
+      const st = STEPS[step] || {};
+      const t = st.date ? fmtTime(st.date) : '';
+      const head = `<div class="lmonth is-step"><span class="ls-n">Step ${step}</span><span class="ls-m">${byWho(step, st.model || '')}</span>${t ? `<span class="ls-t">${t} UTC</span>` : ''}<span class="mn">${fs.length}</span></div>`;
+      return head + fs.map(rowHTML).join('');
+    }).join('');
+    return `<div class="list-year is-added"${idOnce(`lday-${key}`)}><div class="yl">${esc(dayTitle)}<small>${esc(daySub)}</small></div><div class="rows">${rows}</div></div>`;
+  }).join('')}</section>`;
+}
+
 function renderList(list) {
   if (!list.length) { $('#list').innerHTML = emptyHTML(); return; }
+  if (S.order === 'added') { renderListAdded(list); return; }
   const newest = S.order === 'new';
   $('#list').innerHTML = (newest ? [...ERAS].reverse() : ERAS).map(era => {
     const facts = list.filter(f => eraOf(f.date) === era.id);
@@ -1187,17 +1251,34 @@ function renderList(list) {
 
 // "Jump to": the dense years and their month groups, with a dot where the version adds facts.
 // A year split across two eras gets one year button and the groups of each dense part.
+// In "Recently added" list mode, jumps to each day a model added or revised facts.
 function renderJump(list) {
+  const bar = $('#jump');
+  if (S.view === 'list' && S.order === 'added') {
+    const days = addedDaysOf(list);
+    bar.hidden = days.length < 2;
+    bar.setAttribute('aria-label', 'Jump to a day added');
+    bar.innerHTML = days.length >= 2 ? `<span class="jl">Jump to</span>${days.map(({ key, facts }) => {
+      const label = key === 'base' ? 'Base' : fmtDate(key).replace(/ \d{4}$/, '');
+      const full = key === 'base' ? 'Base set' : fmtDate(key);
+      return `<button type="button"${key === 'base' ? '' : ' class="is-y"'} data-jump="day-${esc(key)}" aria-label="${esc(full)}, ${plural(facts.length, 'fact')}">${esc(label)}<b>${facts.length}</b>${facts.some(isMarked) ? '<i class="new" title="New or revised in this version"></i>' : ''}</button>`;
+    }).join('')}` : '';
+    return;
+  }
+  bar.setAttribute('aria-label', 'Jump to a year or a month');
   const parts = [];
   for (const era of ERAS) for (const y of yearsOf(list.filter(f => eraOf(f.date) === era.id))) {
     const plan = planPart(list, era.id, y);
     if (plan) parts.push({ y, plan, first: !parts.some(p => p.y === y) });
   }
-  const bar = $('#jump');
   bar.hidden = !parts.length;
   bar.innerHTML = parts.length ? `<span class="jl">Jump to</span>${parts.map(({ y, plan, first }) => `${first ? `<button type="button" class="is-y" data-jump="${y}">${y}<b>${factsOfYear(list, y).length}</b></button>` : ''}${plan.map(b => `<button type="button" data-jump="${y}-${b.i}" aria-label="${b.label} ${y}, ${plural(b.n, 'fact')}">${b.label}<b>${b.n}</b>${b.cols.flat().some(isMarked) ? '<i class="new" title="New or revised in this version"></i>' : ''}</button>`).join('')}`).join('')}` : '';
 }
 function jumpTo(key) {
+  if (key.startsWith('day-')) {
+    document.getElementById(`l${key}`)?.scrollIntoView({ block: 'start' });
+    return;
+  }
   const [y, i] = key.split('-');
   if (S.view === 'strip') {
     const el = document.getElementById(i === undefined ? `sy-${y}` : `sm-${y}-${i}`), s = $('#strip');
@@ -1241,12 +1322,13 @@ function renderTimeline() {
   const all = factsAt(S.step), list = applyFilters(all);
   $('#tl-count').textContent = list.length === all.length ? plural(all.length, 'fact') : `${list.length} of ${plural(all.length, 'fact')}`;
   const strip = S.view === 'strip';
+  const byAdded = !strip && S.order === 'added';
   $('#strip-wrap').hidden = !strip; $('#list').hidden = strip;
   $('#prev').hidden = !strip; $('#next').hidden = !strip;
   $('#order-wrap').hidden = strip;
-  $('#order').textContent = S.order === 'new' ? 'Newest first' : 'Oldest first';
-  $('#order').setAttribute('aria-label', `Order: ${S.order === 'new' ? 'newest' : 'oldest'} first. Switch`);
-  renderMinimap(list);
+  $('#minimap').hidden = byAdded;
+  document.querySelectorAll('[data-order]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.order === S.order)));
+  if (!byAdded) renderMinimap(list);
   renderJump(list);
   if (strip) renderStrip(list); else renderList(list);
   // After the strip: the active era is read from it.
@@ -1545,7 +1627,7 @@ function closeDrawer(fromRoute = false) {
 }
 
 /* ── Shareable links: the version and the filters live in the address ── */
-// ?step=4&kind=model,research&lab=OpenAI&q=oct%202026&status=disputed, each only when it differs from the default.
+// ?step=4&kind=model,research&lab=OpenAI&q=oct%202026&status=disputed&order=added, each only when it differs from the default.
 function readURL() {
   const p = new URLSearchParams(location.search);
   const step = p.get('step');
@@ -1556,6 +1638,8 @@ function readURL() {
   if (p.get('q')) { S.q = p.get('q'); $('#q').value = S.q; }
   const st = p.get('status');
   if (st === 'all' || STATUS[st]) S.status = st;
+  const ord = p.get('order');
+  if (ord === 'new' || ord === 'old' || ord === 'added') { S.order = ord; S.view = 'list'; }
 }
 let urlTimer = 0;
 function writeURL(later = false) {
@@ -1568,6 +1652,7 @@ function writeURL(later = false) {
   if (S.lab !== 'all') p.push(['lab', S.lab]);
   if (S.q.trim()) p.push(['q', S.q.trim()]);
   if (S.status) p.push(['status', S.status]);
+  if (S.view === 'list' && S.order !== 'new') p.push(['order', S.order]);
   const search = p.length ? `?${p.map(([k, v]) => `${k}=${encodeURIComponent(v).replace(/%2C/g, ',')}`).join('&')}` : '';
   if (search === location.search) return;
   try { history.replaceState(history.state, '', `${location.pathname}${search}${location.hash}`); } catch {}
@@ -1625,14 +1710,15 @@ document.addEventListener('click', e => {
   if (vb) {
     S.view = vb.dataset.view;
     try { localStorage.setItem('llmh-view', S.view); } catch {}
-    renderToolbar(); renderTimeline();
+    renderToolbar(); renderTimeline(); writeURL();
     if (S.view === 'strip') requestAnimationFrame(jumpToEnd);
     return;
   }
-  if (t.closest('#order')) {
-    S.order = S.order === 'new' ? 'old' : 'new';
+  const ob = t.closest('[data-order]');
+  if (ob) {
+    S.order = ob.dataset.order;
     try { localStorage.setItem('llmh-order', S.order); } catch {}
-    renderTimeline(); return;
+    renderTimeline(); writeURL(); return;
   }
   if (t.closest('[data-clear]')) { S.kinds = new Set(Object.keys(KINDS)); S.lab = 'all'; S.q = ''; $('#q').value = ''; renderToolbar(); renderTimeline(); writeURL(); return; }
   const band = t.closest('.band');
